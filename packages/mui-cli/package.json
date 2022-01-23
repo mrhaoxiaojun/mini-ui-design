@@ -1,0 +1,19 @@
+{
+  "name": "mui-cli",
+  "version": "0.0.0",
+  "description": "Now I’m the model of a modern major general / The venerated Virginian veteran whose men are all / Lining up, to put me up on a pedestal / Writin’ letters to relatives / Embellishin’ my elegance and eloquence / But the elephant is in the room / The truth is in ya face when ya hear the British cannons go / BOOM",
+  "keywords": [],
+  "author": "'haoxj' <'haoxiaojun@cnpc.com.cn'>",
+  "license": "ISC",
+  "main": "mui-design.umd.js",
+  "module": "mui-design.es.js",
+  "scripts": {
+    "cli:dev": "esbuild --bundle ./index.js --format=cjs --platform=node --outdir=./lib --watch",
+    "cli:build": "esbuild --bundle ./index.js --format=cjs --platform=node --outdir=./lib",
+    "cli": "node ./lib/index.js create",
+    "build:lib": "node ./commands/build.js"
+  },
+  "devDependencies": {
+    "fs-extra": "^10.0.0"
+  }
+}

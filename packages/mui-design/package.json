@@ -1,0 +1,29 @@
+{
+  "name": "mui-design",
+  "version": "0.0.0",
+  "description": "the mini version of vue devui for study",
+  "keywords": [],
+  "author": "'haoxj' <'1458149969@qq.com'>",
+  "license": "ISC",
+  "main": "mui-design.umd.js",
+  "module": "mui-design.es.js",
+  "scripts": {
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:serve": "vitepress serve docs",
+    "register:components": "vitepress-rc",
+    "test": "jest"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xxxxxx/xxx.git"
+  },
+  "bugs": {
+    "url": "https://github.com/xxxxxx/xxx/issues"
+  },
+  "homepage": "https://github.com/xxxxxx/xxx#readme"
+
+}
