@@ -10,6 +10,7 @@ const _path = {
   src:'../../mui-design',
   dist:'../../mui-design/dist-ui'
 }
+console.log(121)
 const entryDir = path.resolve(__dirname, `${_path.src}/src-ui`);
 const outputDir = path.resolve(__dirname, _path.dist);
 const copyFile = [
