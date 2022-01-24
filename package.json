@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "lerna:dev": "lerna exec --scope mui-design yarn docs:dev",
     "lerna:build": "lerna exec --scope mui-design yarn docs:build",
-    "lerna:cli": "lerna exec --scope mui-cli yarn cli:build",
+    "lerna:cli": "lerna exec --scope mui-cli yarn cli",
     "lerna:build-lib": "lerna exec --scope mui-cli yarn build:lib"
   },
   "dependencies": {

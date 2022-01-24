@@ -1,12 +1,20 @@
 {
   "name": "mui-design",
   "version": "0.0.0",
-  "description": "the mini version of vue devui for study",
-  "keywords": [],
   "author": "'haoxj' <'1458149969@qq.com'>",
-  "license": "ISC",
+  "description": "the mini version of vue devui for study",
+  "keywords": [
+    "mui-design",
+    "library",
+    "components",
+    "docs",
+    "theme",
+    "lerna"
+  ],
+  "license": "MIT",
   "main": "mui-design.umd.js",
   "module": "mui-design.es.js",
+  "private": false,
   "scripts": {
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
@@ -19,11 +27,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xxxxxx/xxx.git"
+    "url": "git+https://github.com/mrhaoxiaojun/mui-fe.git"
   },
   "bugs": {
-    "url": "https://github.com/xxxxxx/xxx/issues"
+    "url": "https://github.com/mrhaoxiaojun/mui-fe.git/issues"
   },
-  "homepage": "https://github.com/xxxxxx/xxx#readme"
-
+  "homepage": "https://github.com/mrhaoxiaojun/mui-fe.git#readme",
+  "engines": {
+    "node": ">= 16.0.0",
+    "npm": ">= 8.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
 }

@@ -1,19 +1,38 @@
 {
   "name": "mui-cli",
   "version": "0.0.0",
+  "author": "'haoxj' <'1458149969@qq.com'>",
   "description": "Now I’m the model of a modern major general / The venerated Virginian veteran whose men are all / Lining up, to put me up on a pedestal / Writin’ letters to relatives / Embellishin’ my elegance and eloquence / But the elephant is in the room / The truth is in ya face when ya hear the British cannons go / BOOM",
-  "keywords": [],
-  "author": "'haoxj' <'haoxiaojun@cnpc.com.cn'>",
-  "license": "ISC",
-  "main": "mui-design.umd.js",
-  "module": "mui-design.es.js",
+  "keywords": [
+    "mui-cli",
+    "library-cli",
+    "lerna"
+  ],
+  "license": "MIT",
   "scripts": {
     "cli:dev": "esbuild --bundle ./index.js --format=cjs --platform=node --outdir=./lib --watch",
     "cli:build": "esbuild --bundle ./index.js --format=cjs --platform=node --outdir=./lib",
     "cli": "node ./lib/index.js create",
     "build:lib": "node ./commands/build.js"
   },
-  "devDependencies": {
-    "fs-extra": "^10.0.0"
-  }
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrhaoxiaojun/mui-fe.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mrhaoxiaojun/mui-fe.git/issues"
+  },
+  "homepage": "https://github.com/mrhaoxiaojun/mui-fe.git#readme",
+  "engines": {
+    "node": ">= 16.0.0",
+    "npm": ">= 8.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
 }
