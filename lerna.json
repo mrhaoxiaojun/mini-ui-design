@@ -1,12 +1,6 @@
 {
   "useWorkspaces": true,
   "version": "independent",
-  "npmClient": "yarn", 
-  "command": { 
-    "publish": { 
-      "ignoreChanges": [ 
-        "mui-cli"
-      ]
-    }
-  }
+  "npmClient": "yarn",
+
 }
