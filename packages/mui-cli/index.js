@@ -16,6 +16,7 @@
 import { Command } from 'commander'
 import { onCreate } from './commands/create'
 
+
 // 创建命令对象
 const program = new Command()
 
