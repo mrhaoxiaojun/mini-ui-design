@@ -8,7 +8,7 @@ const fsExtra = require("fs-extra");
 // 路径处理
 const _path = {
   src:'../../mui-design',
-  dist:'../../../build'
+  dist:'../../../mui-design'
 }
 const entryDir = path.resolve(__dirname, `${_path.src}/ui`);
 const outputDir = path.resolve(__dirname, _path.dist);

@@ -9,10 +9,10 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
-    "lerna:dev": "lerna exec --scope mui-design yarn docs:dev",
-    "lerna:build": "lerna exec --scope mui-design yarn docs:build",
-    "lerna:cli": "lerna exec --scope mui-cli yarn cli",
-    "lerna:build-lib": "lerna exec --scope mui-cli yarn build:lib"
+    "docs:dev": "lerna exec --scope mui-design yarn docs:dev",
+    "docs:build": "lerna exec --scope mui-design yarn docs:build",
+    "lib:cli": "lerna exec --scope mui-cli yarn cli",
+    "build:lib": "lerna exec --scope mui-cli yarn build:lib"
   },
   "dependencies": {
     "vue": "^3.2.25"
