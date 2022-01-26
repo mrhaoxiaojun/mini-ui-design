@@ -8,10 +8,9 @@ const fsExtra = require("fs-extra");
 // 路径处理
 const _path = {
   src:'../../mui-design',
-  dist:'../../mui-design/dist-ui'
+  dist:'../../mui-design/dist'
 }
-console.log(11111)
-const entryDir = path.resolve(__dirname, `${_path.src}/src-ui`);
+const entryDir = path.resolve(__dirname, `${_path.src}/src`);
 const outputDir = path.resolve(__dirname, _path.dist);
 const copyFile = [
   {

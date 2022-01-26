@@ -1,17 +1,14 @@
 {
-  "name": "kd-fe",
+  "name": "fe-lib",
   "version": "0.0.0",
   "private": true,
   "workspaces": [
     "packages/mui-design"
   ],
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
-    "preview": "vite preview",
     "docs:dev": "lerna exec --scope mui-design yarn docs:dev",
     "docs:build": "lerna exec --scope mui-design yarn docs:build",
-    "lib:cli": "lerna exec --scope mui-cli yarn cli",
+    "cct:cli": "lerna exec --scope mui-cli yarn cli",
     "build:lib": "lerna exec --scope mui-cli yarn build:lib"
   },
   "dependencies": {
@@ -27,12 +24,6 @@
     "@vue/babel-plugin-jsx": "^1.1.1",
     "@vue/test-utils": "^2.0.0-rc.16",
     "babel-jest": "^27.4.6",
-    "commander": "^8.3.0",
-    "esbuild": "^0.14.11",
-    "fs-extra": "^10.0.0",
-    "inquirer": "^8.2.0",
-    "jest": "^27.4.7",
-    "kolorist": "^1.5.1",
     "lerna": "^4.0.0",
     "sass": "^1.47.0",
     "typescript": "^4.4.4",

@@ -1,6 +1,6 @@
 {
-  "name": "mui-cli1",
-  "version": "0.0.2-alpha.0",
+  "name": "mui-cli",
+  "version": "0.0.0",
   "author": "'haoxj' <'1458149969@qq.com'>",
   "description": "Now I’m the model of a modern major general / The venerated Virginian veteran whose men are all / Lining up, to put me up on a pedestal / Writin’ letters to relatives / Embellishin’ my elegance and eloquence / But the elephant is in the room / The truth is in ya face when ya hear the British cannons go / BOOM",
   "keywords": [
@@ -11,10 +11,10 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "cli:dev": "esbuild --bundle ./index.js --format=cjs --platform=node --outdir=./lib --watch",
-    "cli:build": "esbuild --bundle ./index.js --format=cjs --platform=node --outdir=./lib",
-    "cli": "node ./lib/index.js create",
-    "build:lib": "node ./commands/build.js"
+    "cli:dev": "esbuild --bundle ./src/bin.js --format=cjs --platform=node --outdir=./src/lib --watch",
+    "cli:build": "esbuild --bundle ./src/bin.js --format=cjs --platform=node --outdir=./src/lib",
+    "cli": "node ./src/lib/index.js create",
+    "build:lib": "node ./src/commands/build.js"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
@@ -35,5 +35,12 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "devDependencies": {
+    "commander": "^8.3.0",
+    "esbuild": "^0.14.11",
+    "fs-extra": "^10.0.0",
+    "inquirer": "^8.2.0",
+    "kolorist": "^1.5.1"
+  }
 }
