@@ -6,13 +6,12 @@ import useToggle from './composables/use-toggle'
 import './tree.scss'
 
 export default defineComponent({
-  name: 'DTree',
+  name: 'Tree',
   props: treeProps,
   emits: [],
   setup(props: TreeProps, ctx) {
     const { data } = toRefs(props)
     const { openedData, toggle } = useToggle(data.value)
-
     // 增加缩进的展位元素
     const Indent = () => {
       return <span style="display: inline-block; width: 16px; height: 16px;"></span>

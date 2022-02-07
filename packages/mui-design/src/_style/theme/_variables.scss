@@ -1,0 +1,19 @@
+
+// z-index
+$m-z-index-full-page-overlay: var(--m-z-index-full-page-overlay, 1080); // 全屏覆盖类元素
+
+// font
+$m-font-size: var(--m-font-size, 12px); //正文、卡片副标题
+
+$m-font-size-sm: var(--m-font-size-sm, 12px);  //当组件size为'sm'时使用此字号大小
+$m-font-size-md: var(--m-font-size-md, 14px);  //当组件size为''时使用此字号大小
+$m-font-size-lg: var(--m-font-size-lg, 16px);  //当组件size为'lg'时使用此字号大小
+
+$m-font-title-weight: bold; //标题文字粗细
+$m-font-content-weight: normal; //内容文字粗细
+$m-line-height-base: 1.5; //规范行高
+
+// 圆角
+$m-border-radius: var(--m-border-radius, 2px); //一般圆角
+$m-border-radius-feedback: var(--m-border-radius-feedback, 4px); //反馈类圆角
+$m-border-radius-card: var(--m-border-radius-card, 6px); //卡片圆角

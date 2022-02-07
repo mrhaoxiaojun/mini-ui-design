@@ -1,8 +1,13 @@
+// 固定写法需要，自动生成
 import type { App } from 'vue'
 import Tree from './src/tree'
+import conf from './../_config/config'
 
 Tree.install = function(app: App): void {
-  app.component(Tree.name, Tree)
+  app.use(conf)
+  
+  const componentPrefix = app.config.globalProperties._COMPONENT_PREFIX
+  app.component(`${componentPrefix}${Tree.name}`, Tree)
 }
 
 export { Tree }

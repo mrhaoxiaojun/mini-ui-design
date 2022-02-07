@@ -4,14 +4,18 @@
 
 ```vue
 <template>
-  <d-tree :data="data"></d-tree>
+{{test}}
+  <m-tree :data="data"></m-tree>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, getCurrentInstance, ref } from 'vue'
 
 export default defineComponent({
   setup() {
+    const {_mLang} = getCurrentInstance()?.appContext.config.globalProperties
+    let test = ref(_mLang.fail)
+
     const data = ref([{
       label: '一级 1', level: 1,
       children: [{
@@ -54,7 +58,8 @@ export default defineComponent({
     }])
 
     return {
-      data
+      data,
+      test
     }
   }
 })
