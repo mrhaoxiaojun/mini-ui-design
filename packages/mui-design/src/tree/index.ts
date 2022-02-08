@@ -2,6 +2,7 @@
 import type { App } from 'vue'
 import Tree from './src/tree'
 import conf from './../_config/config'
+import locale from './../_i18n/i18n'
 
 Tree.install = function(app: App): void {
   app.use(conf)
@@ -10,7 +11,7 @@ Tree.install = function(app: App): void {
   app.component(`${componentPrefix}${Tree.name}`, Tree)
 }
 
-export { Tree }
+export { Tree,locale }
 
 export default {
   title: 'Tree 树',

@@ -24,7 +24,7 @@
     "cli:dev": "esbuild --bundle ./mui-cli/src/bin.js --format=cjs --platform=node --outdir=./mui-cli/src/lib --watch",
     "cli:build": "esbuild --bundle ./mui-cli/src/bin.js --format=cjs --platform=node --outdir=./mui-cli/src/lib",
     "cli": "node ./mui-cli/src/lib/index.js create",
-    "build:lib": "node --loader ts-node/esm ./mui-cli/src/commands/build.ts",
+    "build:lib": "node --loader ts-node/esm ./mui-cli/src/commands/build/index.ts",
     "watch": "tsc --watch"
   },
   "publishConfig": {
@@ -75,5 +75,6 @@
     "vitepress": "^0.21.4",
     "vitepress-theme-demoblock": "^1.4.2",
     "vue-tsc": "^0.29.8"
-  }
+  },
+  "dependencies": {}
 }

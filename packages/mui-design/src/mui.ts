@@ -13,7 +13,8 @@ const installs = [
 
 export {
   locale,
-  Tree,Card
+  Tree,
+  Card,
 }
 
 export default {

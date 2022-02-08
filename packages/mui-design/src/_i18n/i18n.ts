@@ -3,7 +3,7 @@
  * @Date: 2022-02-03 18:03:03 
  * @Details:  简版i18n
  * @Last Modified by: haoxiaojun
- * @Last Modified time: 2022-02-03 22:33:52
+ * @Last Modified time: 2022-02-07 16:09:28
  */
 import type { App } from 'vue'
 import zhCN from './lang/zh-CN'
@@ -20,6 +20,6 @@ export default {
   install(app: App, lang:string): void {
     // app.use(Tree as any)
     if(!isValidKey(message,lang))  throw Error('invalid sequence');
-    app.config.globalProperties._mLang = message[lang]
+    app.config.globalProperties._mLang = message[lang] || 'zh-CN'
   }
 }

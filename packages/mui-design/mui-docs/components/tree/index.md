@@ -1,20 +1,19 @@
+
 # Tree 树
 
 :::demo 渲染一棵基本树
 
 ```vue
 <template>
-{{test}}
   <m-tree :data="data"></m-tree>
 </template>
 
 <script lang="ts">
-import { defineComponent, getCurrentInstance, ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   setup() {
-    const {_mLang} = getCurrentInstance()?.appContext.config.globalProperties
-    let test = ref(_mLang.fail)
+
 
     const data = ref([{
       label: '一级 1', level: 1,
@@ -58,8 +57,7 @@ export default defineComponent({
     }])
 
     return {
-      data,
-      test
+      data
     }
   }
 })

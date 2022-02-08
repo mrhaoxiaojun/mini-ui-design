@@ -1,4 +1,4 @@
-import { defineComponent, toRefs } from 'vue'
+import { defineComponent, getCurrentInstance, ref, toRefs } from 'vue'
 import { treeProps, TreeProps, TreeData, TreeItem } from './tree-types'
 import IconOpen from './components/icon-open'
 import IconClose from './components/icon-close'
@@ -11,6 +11,8 @@ export default defineComponent({
   emits: [],
   setup(props: TreeProps, ctx) {
     const { data } = toRefs(props)
+    const _mLang  = getCurrentInstance()?.appContext.config.globalProperties._mLang
+    console.log(1111111,_mLang.fail)
     const { openedData, toggle } = useToggle(data.value)
     // 增加缩进的展位元素
     const Indent = () => {
