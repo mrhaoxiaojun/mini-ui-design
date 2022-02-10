@@ -30,6 +30,18 @@ Mini UI Design 是 Vue3 版本的 UI 组件库，基于各家开源项目的思�
 * 支持命令自动化创建组件入口文件
 * 支持命令自动化创建一个新增组件的模板，并为其完成注册
 
+## 技术栈
+
+* 编程语言：TypeScript 4.x + JavaScript
+* 构建工具：Vite 2.x
+* 前端框架：Vue 3.x
+* CSS 预编译：Sass
+* Git Hook 工具：husky + lint-staged(待实现)
+* 代码规范：EditorConfig + Prettier + ESLint + Airbnb JavaScript Style Guide (待实现)
+* 提交规范：Commitizen + Commitlint (待实现)
+* 单元测试：vue-test-utils + jest
+* 自动部署：GitHub Actions(待实现)
+
 ## Usage Mini UI Design
 
 [Mini UI Design 快速开始](https://github.com/mrhaoxiaojun/mini-ui-design/blob/master/packages/mui-design/mui-docs/start.md)
