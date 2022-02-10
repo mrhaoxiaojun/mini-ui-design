@@ -2,17 +2,4 @@
 
 > TODO: description
 
-## Usage
-
-```
-const muiDesign = require('mui-design');
-
-// TODO: DEMONSTRATE API
-```
-
-## 说明
-vite+vue3+ts+jsx+sass的基础工程
-基于vitepress+vitepress-theme-demoblock的文档系统
-jest+@vue/test-utils的单元测试环境
-
-
+[Mini UI Design 快速开始](https://github.com/mrhaoxiaojun/mini-ui-design/blob/master/README.md)

@@ -21,7 +21,6 @@ yarn create vite my-vue-app --template vue-ts
 
 ```shell
 yarn add mui-design
-
 ```
 
 ### 3. 全量引入
@@ -35,7 +34,7 @@ import 'mui-design/mui.css'
 createApp(App).use(mui).mount('#app')
 ```
 
-### 3. 按需引入
+### 4. 按需引入
 
 main.ts 按需引入
 
@@ -76,9 +75,36 @@ createApp(App)
 .use(Tree) 
 .mount('#app')
 ```
+### 4. 按需引入(待测试)
+配置unplugin-vue-components插件可以无需引入mui-design就可以直接按需使用其中的组件，具体使用方式如下：
 
-### 4. 启动开发调试
+在vite.config.ts文件中添加以下代码：
+```js
+import Components from 'unplugin-vue-components/vite'
+import { DevUiResolver } from 'unplugin-vue-components/resolvers'
+
+export default defineConfig({
+  plugins: [
+    vue(),
+    // 新增
+    Components({
+      resolvers: [
+        DevUiResolver()
+      ]
+    })
+  ]
+})
+```
+### 6. 启动开发调试
 
 ```shell
 yarn dev
+```
+
+### 7. 使用
+
+```
+<template>
+  <m-button>确定</-button>
+</template>
 ```

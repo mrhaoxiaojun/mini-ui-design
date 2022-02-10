@@ -1,7 +1,8 @@
 {
-  "name": "fe-lib",
+  "name": "mini-ui-design",
   "version": "0.0.0",
   "private": true,
+  "license": "MIT",
   "workspaces": [
     "packages/*"
   ],
