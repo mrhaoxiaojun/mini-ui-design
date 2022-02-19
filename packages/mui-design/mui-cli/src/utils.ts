@@ -3,11 +3,11 @@
  * @Date: 2022-02-07 15:46:09 
  * @Details: 工具类
  * @Last Modified by: haoxiaojun
- * @Last Modified time: 2022-02-07 15:46:57
+ * @Last Modified time: 2022-02-19 17:24:55
  */
 import fs from "fs";
 import { resolve } from "path";
-
+import { camelCase,upperFirst } from 'lodash'
  /**
  * 遍历获取指定根目录下子目录，并要求子目录包含指定文件的名称
  *
@@ -21,4 +21,8 @@ export const components = (entryDir: string, fileName:string = "index.ts") => {
     const isDir = fs.lstatSync(componentDir).isDirectory();
     return isDir && fs.readdirSync(componentDir).includes(fileName);
   })
+}
+
+export const bigCamelCase = (str:string) => {
+  return upperFirst(camelCase(str))
 }

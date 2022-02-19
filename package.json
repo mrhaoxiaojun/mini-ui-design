@@ -7,9 +7,9 @@
     "packages/*"
   ],
   "scripts": {
-    "docs:dev": "lerna exec --scope mui-design yarn docs:dev",
-    "docs:build": "lerna exec --scope mui-design yarn docs:build",
-    "cct:cli": "lerna exec --scope mui-design yarn cli",
+    "docs:dev": "lerna exec --scope mui-design yarn dev",
+    "docs:build": "lerna exec --scope mui-design yarn build",
+    "cli:generate": "lerna exec --scope mui-design yarn cli:generate",
     "build:lib": "lerna exec --scope mui-design yarn build:lib"
   },
   "dependencies": {
