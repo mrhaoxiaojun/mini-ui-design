@@ -3,15 +3,15 @@
  * @Date: 2022-02-13 20:26:38 
  * @Details: 生成组件和MD文档模板、入口文件
  * @Last Modified by: haoxiaojun
- * @Last Modified time: 2022-02-19 17:44:15
+ * @Last Modified time: 2022-02-24 11:04:31
  */
 import inquirer from 'inquirer'
 import fs from "fs-extra"
-import { red } from 'kolorist'
+import { bgBlue, lightBlue, lightYellow, red } from 'kolorist'
 import { resolve } from 'path'
-import { CREATE_SUPPORT_TYPES, DOCS_COMPONENTS_DIR, COMPONENTS_DIR, TESTS_DIR, INDEX_FILE_NAME, DOCS_FILE_NAME } from './constant'
+import { CREATE_SUPPORT_TYPES, DOCS_COMPONENTS_DIR, COMPONENTS_DIR, TESTS_DIR, INDEX_FILE_NAME, DOCS_FILE_NAME, VITEPRESS_SIDEBAR_FILE, MAIN_FILE } from './constant'
 import { selectCategory, selectCreateType, typeName, typeTitle } from './inquirers'
-import { generateComponentTemplate, generateDocumentTemplate, generateIndexTemplate, generateStyleTemplate, generateTestsTemplate, generateTypesTemplate } from './templates'
+import { generateComponentTemplate, generateDocumentTemplate, generateIndexTemplate, generateMainTemplate, generateStyleTemplate, generateTestsTemplate, generateTypesTemplate, generateVitepressSidebarTemplate } from './templates'
 import { bigCamelCase } from '../../utils'
 import { camelCase } from 'lodash'
 
@@ -68,8 +68,9 @@ export const generate:Generate = async (cmd = {}) => {
 }
 
 const generateComponent = async (info:Info) => {
-  // 输出收集到的组件信息
-  console.log(info)
+  console.log(lightBlue('Generate new components.'))
+  console.log("---------------------------")
+
   let  { name } = info
   name = camelCase(name)
 
@@ -99,15 +100,27 @@ const generateComponent = async (info:Info) => {
     fs.writeFile(resolve(srcDir, `${typesName}.ts`), generateTypesTemplate(_params)),
     fs.writeFile(resolve(srcDir, `${styleName}.scss`), generateStyleTemplate(_params)),
     fs.writeFile(resolve(testsDir, `${testName}.ts`), generateTestsTemplate(_params)),
-    fs.writeFile(resolve(docsDir, DOCS_FILE_NAME), generateDocumentTemplate(_params))
+    fs.writeFile(resolve(docsDir, DOCS_FILE_NAME), generateDocumentTemplate(_params)),
   ]
   await Promise.all(writeFiles)
+  
+  console.log(bgBlue(`已生成新组件：`) + lightYellow(bigCamelCase(componentName)))
+  console.log(bgBlue(`组件文件地址：`) + lightYellow(componentDir))
+  console.log(bgBlue(`markdown地址：`) + lightYellow(docsDir))
 
-  console.log(`创建组件 ${bigCamelCase(componentName)} 成功！`)
-  console.log(`组件目录：${componentDir}`)
-  console.log(`MD目录：${docsDir}`)
+  generateLibEntry()
 }
 
 function generateLibEntry() {
-  console.log('create lib-entry file.')
+  console.log(lightBlue('Generate lib-entry file.'))
+  console.log("---------------------------")
+
+  // 生成菜单入口（sidebar）
+  fs.writeFile(VITEPRESS_SIDEBAR_FILE, generateVitepressSidebarTemplate())
+
+  // 生成mian入口文件
+  fs.writeFile(MAIN_FILE, generateMainTemplate())
+
+  console.log(bgBlue(`已生成菜单文件：`) + lightYellow(VITEPRESS_SIDEBAR_FILE))
+  console.log(bgBlue(`已生成入口文件：`) + lightYellow(MAIN_FILE))
 }

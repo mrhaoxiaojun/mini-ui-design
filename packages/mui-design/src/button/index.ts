@@ -13,7 +13,7 @@ Button.install = function(app: App): void {
 export { Button,locale }
 
 export default {
-  title: 'Button a',
+  title: 'Button 测试按钮',
   category: '通用',
   install(app: App): void {
     app.use(Button as any)

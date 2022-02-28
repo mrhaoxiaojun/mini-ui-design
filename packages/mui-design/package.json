@@ -21,10 +21,7 @@
     "serve": "vitepress serve mui-docs",
     "test": "jest",
     "build:components": "node --loader ts-node/esm ./mui-cli/src/commands/build/index.ts",
-    "cli:generate": "node --loader ts-node/esm ./mui-cli/src/commands/generate/bin.ts generate",
-    "cli:dev": "esbuild --bundle ./mui-cli/src/bin.js --format=cjs --platform=node --outdir=./mui-cli/src/lib --watch",
-    "cli:build": "esbuild --bundle ./mui-cli/src/bin.js --format=cjs --platform=node --outdir=./mui-cli/src/lib",
-    "watch": "tsc --watch"
+    "cli:generate": "node --loader ts-node/esm ./mui-cli/src/commands/generate/bin.ts generate"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
@@ -48,8 +45,10 @@
   ],
   "devDependencies": {
     "@babel/core": "^7.16.7",
+    "@babel/parser": "^7.17.3",
     "@babel/preset-env": "^7.16.8",
     "@babel/preset-typescript": "^7.16.7",
+    "@babel/traverse": "^7.17.3",
     "@types/fs-extra": "^9.0.13",
     "@types/inquirer": "^8.2.0",
     "@types/jest": "^27.4.0",

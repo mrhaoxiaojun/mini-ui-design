@@ -1,14 +1,14 @@
 # 关于 Mini UI Design
 
-Mini UI Design，即 mui-design（npm包名称），是一套基于 Vue3.0 + TypeScript + Vite + VitePress 的开源 UI 组件库，主要服务于 PC 界面的中后台产品。
+Mini UI Design，即 `mui-design`（npm包名称），是一套基于 `Vue3.0 + TypeScript + Sass + Vite + VitePress` 的开源 UI 组件库，主要服务于 PC 界面的中后台产品。
 
-> 该项目由Vue3.0所驱动而来，融合了小编个人2.0开源的hao-ui组件库的思想，及借鉴了Vue Devui的思想，而后又打磨而成适合自己的，可控的，轻而小的Mini UI Design
+> 该项目由Vue3.0所驱动而来，融合了小编个人Vue2.0开源的[hao-ui组件库](https://mrhaoxiaojun.github.io/hao-ui/#/giud)的内容，及借鉴了[Vue Devui](https://vue-devui.github.io/)的思想，而后又打磨而成适合自己项目的，可控的，轻而小的Mini UI Design
 
 ::: warning 重要提示
 :tada: 好消息组件库已初步成形，可以直接使用；:smiley: 自定义主题等内容还在排期，小编还在持续的完善中...
 :::
 
-当前支持的Vue版本 ^3.0.0
+当前包使用`lerna`进行管理
 
 ### 特性
 
@@ -17,9 +17,10 @@ Mini UI Design，即 mui-design（npm包名称），是一套基于 Vue3.0 + Typ
 * 细致、漂亮的 UI
 * 事无巨细的文档
 * 可定制主题（开发人员）
-* 可自动化生成入口（开发人员）
+* 可自动化生成入口及组件（开发人员）
 
 ### 谁在使用
+占位图
 
 ![1](https://img0.baidu.com/it/u=3767191762,222026383&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=250)
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
@@ -59,5 +60,5 @@ Mini UI Design，即 mui-design（npm包名称），是一套基于 Vue3.0 + Typ
  
 参考内容：
 
-[设计规范](https://devui.design/design-cn/start)       
-[Commit Message Format](https://github.com/angular/angular/blob/master/CONTRIBUTING.md#commit)
+<!-- [设计规范](https://devui.design/design-cn/start)       
+[Commit Message Format](https://github.com/angular/angular/blob/master/CONTRIBUTING.md#commit) -->

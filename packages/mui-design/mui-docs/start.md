@@ -1,11 +1,10 @@
 # 快速开始
 
-引导您如何在项目中使用 mui-design
+引导您如何在项目中使用 `mui-design`
 
-### Vue版本
-
+::: tip Vue版本
 当前支持的Vue版本 ^3.0.0
-
+:::
 ### 1. 创建一个项目
 
 推荐使用@vite/cli创建你的项目，其他项目亦可
@@ -75,13 +74,12 @@ createApp(App)
 .use(Tree) 
 .mount('#app')
 ```
-### 4. 按需引入(待测试)
+<!-- ### 4. 按需引入(待测试)
 配置unplugin-vue-components插件可以无需引入mui-design就可以直接按需使用其中的组件，具体使用方式如下：
 
 在vite.config.ts文件中添加以下代码：
 ```js
 import Components from 'unplugin-vue-components/vite'
-import { DevUiResolver } from 'unplugin-vue-components/resolvers'
 
 export default defineConfig({
   plugins: [
@@ -89,19 +87,24 @@ export default defineConfig({
     // 新增
     Components({
       resolvers: [
-        DevUiResolver()
+        // example of importing Vant
+        (name) => {
+          // where `name` is always CapitalCase
+          if (name.startsWith('Van'))
+            return { importName: name.slice(3), path: 'vant' }
+        }
       ]
     })
   ]
 })
-```
-### 6. 启动开发调试
+``` -->
+### 4. 启动开发调试
 
 ```shell
 yarn dev
 ```
 
-### 7. 使用
+### 5. 使用
 
 ```
 <template>

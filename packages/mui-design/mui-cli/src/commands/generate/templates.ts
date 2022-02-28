@@ -1,6 +1,14 @@
-import { CSS_CLASS_PREFIX } from "./constant"
+/*
+ * @Author: haoxiaojun 
+ * @Date: 2022-02-14 09:49:24 
+ * @Details: 生成的模板文件
+ * @Last Modified by: haoxiaojun
+ * @Last Modified time: 2022-02-24 14:57:09
+ */
+import { COMPONENTS_DIR } from "./constant"
 import { camelCase } from 'lodash'
-import { bigCamelCase } from '../../utils'
+import { bigCamelCase, parseComponentInfo, resolveDirFilesInfo,components } from '../../utils'
+import { COMPONENT_NAMESPACE, CSS_CLASS_PREFIX } from "../../_config/common"
 
 // 创建组件index.ts入口模板
 type IndexParameters = {
@@ -142,9 +150,9 @@ export default defineComponent({
 
 :::
 
-### d-${componentName}
+### ${COMPONENT_NAMESPACE}-${componentName}
 
-d-${componentName} 参数
+${COMPONENT_NAMESPACE}-${componentName} 参数
 
 | 参数 | 类型 | 默认 | 说明 | 跳转 Demo | 全局配置项 |
 | ---- | ---- | ---- | ---- | --------- | --------- |
@@ -152,7 +160,7 @@ d-${componentName} 参数
 |      |      |      |      |           |           |
 |      |      |      |      |           |           |
 
-d-${componentName} 事件
+${COMPONENT_NAMESPACE}-${componentName} 事件
 
 | 事件 | 类型 | 说明 | 跳转 Demo |
 | ---- | ---- | ---- | --------- |
@@ -161,3 +169,95 @@ d-${componentName} 事件
 |      |      |      |           |
 
 `
+// 创建vitepress-sidebar
+type InfoItems = {
+  title: string,
+  category: string,
+  status: string,
+  dirName:string
+}
+export const generateVitepressSidebarTemplate = () => {
+  let sidebar = []
+  const staticNavs = [
+    { text: '介绍', link: '/' },
+    { text: '快速开始', link: '/start' },
+  ]
+  // 读取文件名称、路径
+  const fileInfo = resolveDirFilesInfo(COMPONENTS_DIR)
+
+  // 读取组件内部详情
+  let componentsInfo:InfoItems[] = []
+  fileInfo.forEach( f => {
+    let info= parseComponentInfo(f)
+    componentsInfo.push(info)
+  })
+  
+  // 源数据解析为类sidebar格式
+  let dataAnalysis:any = {}
+  componentsInfo.forEach( v => {
+    dataAnalysis[v.category] =[]
+  })
+  componentsInfo.forEach( v => {
+    dataAnalysis[v.category].push({
+      text:v.title,
+      link: `/components/${v.dirName}/`
+    })
+  })
+  
+// 生成动态sidebar
+  let dynamicSidebar:any = []
+  for(let i in dataAnalysis){
+    dynamicSidebar.push({
+      text:i,
+      children:dataAnalysis[i]
+    })
+  }
+  sidebar = [...staticNavs,...dynamicSidebar]
+  
+  return  `\
+    // 根据脚本自动生成sidebar
+    export default {
+      '/': ${JSON.stringify(sidebar, null, 2).replace(/\n/g, '\n\t')}
+    }
+  `
+}
+
+// 创建组件main入口模板
+export const generateMainTemplate = () => {
+  // 读取文件名称、路径
+  const componentsName =  components(COMPONENTS_DIR)
+
+  let importComponentStr = ''
+  let installsComponents:any = []
+  let exportComponents:any = []
+  componentsName.forEach(componentName => {
+    let name = bigCamelCase(componentName)
+    importComponentStr += `import ${name}Install, { ${name} } from './${componentName}'\n`
+    installsComponents.push(`${name}Install`)
+    exportComponents.push(name)
+  });
+
+  return `
+// 根据脚本自动生成入口文件
+import type { App } from 'vue'
+${importComponentStr}
+import locale from './_i18n/i18n'
+import conf from './_config/config'
+import './_style/style.scss'
+
+const installs = [${installsComponents}]
+
+export {
+  locale,
+  ${exportComponents.join(',\n\t')}
+}
+
+export default {
+  // 实现vue3插件，需要实现一个install方法，将来接收一个App实例，createApp()
+  install(app: App): void {
+    app.use(conf)
+    installs.forEach((p) => app.use(p as any))
+  }
+}
+`
+}

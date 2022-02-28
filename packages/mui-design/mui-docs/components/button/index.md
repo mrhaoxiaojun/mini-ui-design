@@ -1,4 +1,4 @@
-# Button a
+# Button 测试按钮
 
 // todo 组件描述
 
@@ -22,7 +22,7 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   setup() {
     return {
-      msg: 'Button a 组件文档示例'
+      msg: 'Button 测试按钮 组件文档示例'
     }
   }
 })
@@ -35,9 +35,9 @@ export default defineComponent({
 
 :::
 
-### d-button
+### m-button
 
-d-button 参数
+m-button 参数
 
 | 参数 | 类型 | 默认 | 说明 | 跳转 Demo | 全局配置项 |
 | ---- | ---- | ---- | ---- | --------- | --------- |
@@ -45,7 +45,7 @@ d-button 参数
 |      |      |      |      |           |           |
 |      |      |      |      |           |           |
 
-d-button 事件
+m-button 事件
 
 | 事件 | 类型 | 说明 | 跳转 Demo |
 | ---- | ---- | ---- | --------- |
