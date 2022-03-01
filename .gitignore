@@ -3,7 +3,6 @@ node_modules
 dist
 dist-ssr
 *.local
-build
 .vscode
 packages/mui-design/mui-docs/.vitepress/config/sidebar.ts
 packages/mui-design/src/mian.ts

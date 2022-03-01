@@ -28,12 +28,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mrhaoxiaojun/mui-fe.git"
+    "url": "git+https://github.com/mrhaoxiaojun/mini-ui-design"
   },
   "bugs": {
-    "url": "https://github.com/mrhaoxiaojun/mui-fe.git/issues"
+    "url": "https://github.com/mrhaoxiaojun/mini-ui-design/issues"
   },
-  "homepage": "https://github.com/mrhaoxiaojun/mui-fe.git#readme",
+  "homepage": "https://github.com/mrhaoxiaojun/mini-ui-design.git#readme",
   "engines": {
     "node": ">= 16.0.0",
     "npm": ">= 8.0.0"

@@ -3,14 +3,12 @@
  * @Date: 2022-02-13 09:48:17 
  * @Details: 生成工具的常量集合
  * @Last Modified by: haoxiaojun
- * @Last Modified time: 2022-02-24 09:49:10
+ * @Last Modified time: 2022-03-01 15:49:11
  */
 import { COMPONENT_LIBRARY_MAIN_FILE_NAME } from "../../_config/common"
 
 const { resolve } = require('path')
-const { version } = require('../../../../../mui-design/package-lock.json')
 
-export const VERSION = version
 export const CWD = process.cwd()
 
 export const COMPONENTS_DIR = resolve(CWD, 'src')
