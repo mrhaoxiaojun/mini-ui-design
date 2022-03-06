@@ -17,15 +17,6 @@
 	        "link": "/components/button/"
 	      }
 	    ]
-	  },
-	  {
-	    "text": "数据展示",
-	    "children": [
-	      {
-	        "text": "Tree 树",
-	        "link": "/components/tree/"
-	      }
-	    ]
 	  }
 	]
     }

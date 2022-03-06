@@ -14,14 +14,16 @@
   "license": "MIT",
   "main": "dist/mui-design.umd.js",
   "module": "dist/mui-design.es.js",
+  "typings": "types/main.d.ts",
   "private": false,
   "scripts": {
     "dev": "vitepress dev mui-docs",
     "build": "vitepress build mui-docs",
     "serve": "vitepress serve mui-docs",
     "test": "jest",
+    "watch":"tsc",
     "build:components": "node --loader ts-node/esm ./mui-cli/src/commands/build/index.ts",
-    "cli:generate": "node --loader ts-node/esm ./mui-cli/src/commands/generate/bin.ts generate"
+    "cli:generate": "node --loader ts-node/esm ./mui-cli/src/commands/bin.ts generate"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"

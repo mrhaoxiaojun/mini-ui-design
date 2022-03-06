@@ -3,7 +3,7 @@
  * @Date: 2022-02-13 20:26:38 
  * @Details: 生成组件和MD文档模板、入口文件
  * @Last Modified by: haoxiaojun
- * @Last Modified time: 2022-02-24 11:04:31
+ * @Last Modified time: 2022-03-03 15:27:49
  */
 import inquirer from 'inquirer'
 import fs from "fs-extra"
@@ -32,7 +32,6 @@ interface Generate {
 export const generate:Generate = async (cmd = {}) => {
   
   let { type } = cmd
-  
   // 如果没有在命令参数里带入 type 那么就询问一次
   if (!type) {
     const result = await inquirer.prompt([selectCreateType()])
@@ -111,7 +110,7 @@ const generateComponent = async (info:Info) => {
   generateLibEntry()
 }
 
-function generateLibEntry() {
+const generateLibEntry = () => {
   console.log(lightBlue('Generate lib-entry file.'))
   console.log("---------------------------")
 

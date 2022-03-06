@@ -3,7 +3,7 @@
  * @Date: 2022-02-14 09:49:24 
  * @Details: 生成的模板文件
  * @Last Modified by: haoxiaojun
- * @Last Modified time: 2022-02-24 14:57:09
+ * @Last Modified time: 2022-03-02 15:06:26
  */
 import { COMPONENTS_DIR } from "./constant"
 import { camelCase } from 'lodash'
@@ -261,3 +261,13 @@ export default {
 }
 `
 }
+
+// 生成.d.ts文件
+export const  generateIndexDts = () => `\
+import { App } from 'vue';
+declare function install(app: App): void
+declare const _default: {
+    install: typeof install;
+    version: string;
+};
+export default _default;`

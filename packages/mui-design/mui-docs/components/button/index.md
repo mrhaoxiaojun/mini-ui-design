@@ -14,6 +14,7 @@
 ```vue
 <template>
   <div>{{ msg }}</div>
+  <m-button></m-button>
 </template>
 
 <script>

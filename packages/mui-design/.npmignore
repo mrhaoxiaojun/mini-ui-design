@@ -3,4 +3,5 @@ node_modules/_*
 mui-docs/
 mui-cli/
 jest.config.js
+tsconfig.json
 

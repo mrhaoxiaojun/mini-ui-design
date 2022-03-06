@@ -9,7 +9,13 @@
     "sourceMap": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "lib": ["esnext", "dom"]
+    "lib": ["esnext", "dom"],
+    "declaration":true,
+    "declarationDir": "./types",
+    "types": ["vite/client", "jest"],
+    "plugins": [{ "name": "@vuedx/typescript-plugin-vue" }],
+    "emitDeclarationOnly":true,
+    
   },
   "ts-node": {
     "compilerOptions": {
@@ -17,10 +23,7 @@
     }
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "mui-cli/src/**/*.ts"
+    "src/**/main.ts"
   ]
 }
+
