@@ -1,6 +1,6 @@
 {
   "name": "mui-design",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "'haoxj' <'1458149969@qq.com'>",
   "description": "the mini version of vue devui for study",
   "keywords": [
@@ -21,7 +21,7 @@
     "build": "vitepress build mui-docs",
     "serve": "vitepress serve mui-docs",
     "test": "jest",
-    "watch":"tsc",
+    "watch": "tsc",
     "build:components": "node --loader ts-node/esm ./mui-cli/src/commands/build/index.ts",
     "cli:generate": "node --loader ts-node/esm ./mui-cli/src/commands/bin.ts generate"
   },
