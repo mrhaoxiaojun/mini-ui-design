@@ -1,9 +1,7 @@
-import './button.scss';
-declare const _default: import("vue").DefineComponent<Readonly<import("vue").ComponentPropsOptions<{
-    [x: string]: unknown;
-}>>, () => JSX.Element, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, never[], never, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<readonly string[] | import("vue").ExtractPropTypes<Readonly<import("vue").ComponentObjectPropsOptions<{
-    [x: string]: unknown;
-}>>>> & {}, {
-    [x: number]: string;
-} | {}>;
+import { App } from 'vue';
+declare function install(app: App): void
+declare const _default: {
+    install: typeof install;
+    version: string;
+};
 export default _default;

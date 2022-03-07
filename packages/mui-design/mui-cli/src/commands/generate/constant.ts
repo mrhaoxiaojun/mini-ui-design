@@ -3,7 +3,7 @@
  * @Date: 2022-02-13 09:48:17 
  * @Details: 生成工具的常量集合
  * @Last Modified by: haoxiaojun
- * @Last Modified time: 2022-03-01 15:49:11
+ * @Last Modified time: 2022-03-07 15:22:20
  */
 import { COMPONENT_LIBRARY_MAIN_FILE_NAME } from "../../_config/common"
 
@@ -27,4 +27,4 @@ export const MAIN_FILE = resolve(COMPONENTS_DIR, COMPONENT_LIBRARY_MAIN_FILE_NAM
 // 这里的分类顺序将会影响最终生成的页面侧边栏顺序
 export const VITEPRESS_SIDEBAR_CATEGORY = ['通用', '导航', '反馈', '数据录入', '数据展示', '布局']
 // create type 支持项
-export const CREATE_SUPPORT_TYPES = ['component', 'lib-entry']
+export const CREATE_SUPPORT_TYPES = ['component', 'lib-entry', "dts"]

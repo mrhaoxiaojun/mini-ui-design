@@ -9,9 +9,9 @@
   "scripts": {
     "mui:dev": "lerna exec --scope mui-design yarn dev",
     "mui:build": "lerna exec --scope mui-design yarn build",
+    "mui:cli:generate": "lerna exec --scope mui-design yarn cli:generate",
     "mui:build:components": "lerna exec --scope mui-design yarn build:components",
-    "mui:test": "lerna exec --scope mui-design yarn jest",
-    "mui:cli:generate": "lerna exec --scope mui-design yarn cli:generate"
+    "mui:test": "lerna exec --scope mui-design yarn jest"
   },
   "dependencies": {
     "vue": "^3.2.25"
