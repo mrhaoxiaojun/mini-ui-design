@@ -1,6 +1,6 @@
 {
   "name": "mui-design",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "'haoxj' <'1458149969@qq.com'>",
   "description": "the mini version of vue devui for study",
   "keywords": [
@@ -81,6 +81,5 @@
     "vitepress": "^0.21.4",
     "vitepress-theme-demoblock": "^1.4.2",
     "vue-tsc": "^0.29.8"
-  },
-  "dependencies": {}
+  }
 }
