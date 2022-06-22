@@ -17,6 +17,15 @@
 	        "link": "/components/button/"
 	      }
 	    ]
+	  },
+	  {
+	    "text": "反馈",
+	    "children": [
+	      {
+	        "text": "Modal 对话框",
+	        "link": "/components/modal/"
+	      }
+	    ]
 	  }
 	]
     }

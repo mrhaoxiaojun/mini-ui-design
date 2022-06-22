@@ -52,7 +52,7 @@ export const selectCreateType = () => ({
   // 交互方式为列表单选
   type: 'list',
   // 提示信息
-  message: '（必填）请选择生成类型：',
+  message: '（必填）请选择生成类型 [component:组件 | lib-entry:项目入口-首次使用需要生成,打包时也会提示生成 | dts:类型声明打包上线的时候会提示你生成的]:',
   // 选项列表
   choices: CREATE_SUPPORT_TYPES,
   // 默认值，这里是索引下标
