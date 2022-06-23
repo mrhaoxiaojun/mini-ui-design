@@ -13,8 +13,19 @@
 
 ```vue
 <template>
-  <div>{{ msg }}</div>
-  <m-modal  :widgetSize = "{defaultW:500,defaultH:300,maxH:500}">
+  <button @click="open({'type':'formView','id':'1','displayName':'fv1','stopWorkspaceLeft':true})">
+    fromView1-靠左
+  </button>
+  <button @click="open({'type':'formView','id':'2','displayName':'fv2','stopDocBottom':true})">
+    fromView2-靠下
+  </button>
+{{isShow}}
+  <m-modal 
+    :widgetShowProps="isShow"
+    @widgetSmall ="widgetSmall"
+    @widgetClose="widgetClose"
+    :widgetSize = "{defaultW:500,defaultH:300,maxH:500}"
+    >
     <template #widgetBody>
       <div sytle="width:100px;">555</div>
       <p>222</p> 
@@ -22,17 +33,22 @@
   </m-modal>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
 
-export default defineComponent({
-  setup() {
-   
-    return {
-      msg: 'Modal 对话框 组件文档示例'
-    }
-  }
-})
+import {ref } from 'vue'
+  
+let isShow = ref(false)
+
+const open = (data)=>{
+  isShow.value = true
+}
+const widgetSmall = (data)=>{
+  isShow.value = false
+}
+const widgetClose = (data)=>{
+  isShow.value = false
+}
+
 </script>
 
 <style>

@@ -6,16 +6,18 @@ import './modal.scss'
 export default defineComponent({
   name: 'Modal',
   props: modalProps,
-  // emits: ["widgetClose","widgetSmall","widgetResize"],
+  emits: ["widgetClose","widgetSmall","widgetResize"],
   setup(props: ModalProps, ctx) {
 
+    let widgetShow = ref(props.widgetShowProps)
     let widgetSmallShow = ref(false)
     let widgetBigShow = ref(false)
     let widgetNormalShow = ref(true)
     let is_moving = ref(false)
-    let is_showMask = ref(false)
+    let is_showMask = ref(true)
     let dragging = ref(false)
-    let widgetShow = ref(props.widgetShowProps)
+    
+    
     let widgetSizes = reactive(props.widgetSize)
     let oldLocate = reactive({
       left: 0,
@@ -55,9 +57,6 @@ export default defineComponent({
       };
     }
     onMounted(async () => {
-      // DOM 元素将在初始渲染后分配给 ref
-      console.log(modalDom.value.getElementsByClassName("h-modal-widget")[0]["style"]) // <div>This is a root element</div>
-      
       computedSize()
       computedLocate()
     })
@@ -68,7 +67,6 @@ export default defineComponent({
       console.log("widgetShow",widgetShow.value);
     })
 
-
     // 关闭
     const widgetClose = () => {
       widgetSmallShow.value = false;
@@ -78,7 +76,7 @@ export default defineComponent({
       ctx.emit("widgetClose");
     }
     // 最小化
-    const widgetSmall= (event:Event)=> {
+    const widgetSmall= ()=> {
       getLocate();
       widgetNormalShow.value = false;
       widgetSmallShow.value = true;
@@ -86,7 +84,7 @@ export default defineComponent({
       ctx.emit("widgetSmall");
     }
     // 最大化
-    const widgetBig = async (event:Event)=> {
+    const widgetBig = async (event:MouseEvent)=> {
       getLocate();
       widgetNormalShow.value = false;
       widgetSmallShow.value = false;
@@ -115,14 +113,13 @@ export default defineComponent({
       });
     }
     // 正常化
-    const widgetNormal = async (event:Event)=> {
+    const widgetNormal = async (event:MouseEvent)=> {
       (await getDom()).left = oldLocate.left;
       (await getDom()).top = oldLocate.top;
       (await getDom()).width = widgetSizes.defaultW = oldLocate.width;
       (await getDom()).height = oldLocate.height;
       (await getDom("h-modal-body")).height  = oldLocate.height
-        // ? `${Number(oldLocate.height.split("p")[0]) - 24}px`.......?
-        ? `${Number(oldLocate.height) - 24}px`
+        ? `${Number(oldLocate.height.split("p")[0]) - 24}px`
         : "auto";
       widgetNormalShow.value = true;
       widgetSmallShow.value = false;
@@ -137,7 +134,7 @@ export default defineComponent({
       });
     }
     
-    const handleMoveStart = (event:any)=>{
+    const handleMoveStart = (event:MouseEvent)=>{
       dragging.value = true;
       // 鼠标的位置,参照modal左上角
       moveStartX.value = event.clientX - modalDomInner.value.offsetLeft ;
@@ -169,10 +166,10 @@ export default defineComponent({
       off(window, "mouseup", handleMoveEnd);
     }
     
-    const mousedownResize = async (event:any)=> {
+    const mousedownResize = async (event:MouseEvent)=> {
       // await nextTick(async () => {
         targetDiv.value = modalDomInner.value;
-        frameDiv.value = event.target.nextElementSibling; // 线框dom
+        frameDiv.value = event.target?.nextElementSibling; // 线框dom
         headerHeight.value = modalHeader.value.offsetHeight; // modal header height
         is_moving.value = true;
         // 配置靠底部，拖拽需要设置top默认值
@@ -189,7 +186,7 @@ export default defineComponent({
         on(window, "mouseup", mouseupResize);
       // });
     }
-    const mousemoveResize = (event:any)=> {
+    const mousemoveResize = (event:MouseEvent)=> {
       if (!is_moving.value) return false;
       maskDom.value.style["pointer-events"] = "all";
       event.preventDefault();
@@ -216,7 +213,7 @@ export default defineComponent({
       //   frameDiv.value.style.height = widgetSizes.maxH + 'px'
       // }
     }
-    const mouseupResize = (e:Event)=> {
+    const mouseupResize = (event:MouseEvent)=> {
       targetDiv.value.style.width = frameDiv.value.style.width;
       targetDiv.value.style.height = frameDiv.value.style.height;
       modalBody.value.style.height = `${frameDiv.value.offsetHeight - headerHeight.value}px`;
@@ -284,72 +281,78 @@ export default defineComponent({
     }
    
     // console.log(ctx.slots);
-    // ctx.expose({ handleMoveStart });
-    return () => (
-      // <div class="h-modal-widget-wrap" ref={modalDom} v-show={!widgetSmallShow.value}>
-      <div class="h-modal-widget-wrap" ref={modalDom} v-show={widgetShow.value}>
-          <div
-            ref={modalDomInner}
-            class={`h-modal-widget ${ widgetSmallShow.value ? 'widget-wrap widgetSmall':'widget-wrap'}`}
-            style = { widgetBigShow.value ? `width = ${widgetSizes.maxW}` : `width = ${widgetSizes.defaultW}`}>
+    
+    ctx.expose({ handleMoveStart });
+    return () => {
+      
+      return (
+        <div class="h-modal-widget-wrap" ref={modalDom} v-show={!widgetSmallShow.value}>
+        
+            <div
+              ref={modalDomInner}
+              class={`h-modal-widget ${ widgetSmallShow.value ? 'widget-wrap widgetSmall':'widget-wrap'}`}
+              style = { widgetBigShow.value ? `width = ${widgetSizes.maxW}` : `width = ${widgetSizes.defaultW}`}>
 
 
-            {/* heander */}
-            <div class="widgetHead" ref={modalHeader} onMousedown={handleMoveStart}>
+              {/* heander */}
+              <div class="widgetHead" ref={modalHeader} onMousedown={handleMoveStart}>
+                {/* icon */}
+                { widgetSmallShow.value 
+                ? <i
+                  class={props.widgetIconStyle.iconClass}
+                  onClick={widgetNormal}
+                /> 
+                : "" }
+
+                <i  class={props.widgetIconStyle.iconClass} />
+                
+                {/* title */}
+                {
+                  !widgetSmallShow.value 
+                  ? <span class="title">{props.widgetTitle}</span>
+                  : ""
+                }
               
-              {/* icon */}
-              { widgetSmallShow.value 
-              ? <i
-                class={props.widgetIconStyle.iconClass}
-                onClick={widgetNormal}
-              /> 
-              : "" }
+              </div>
 
-              <i  class={props.widgetIconStyle.iconClass} />
+              {/* header 操作按钮 */}
+              <div class="handleDom">
+                { props.widgetMinShow ? <span onClick={widgetSmall}>最小化</span> : "" }
+                { widgetNormalShow.value ? <span onClick={widgetBig}>最大化</span> : "" }
+                { widgetBigShow.value ? <span onClick={widgetNormal}>还原</span> : "" }
+                <span onClick={widgetClose}>关闭</span>
+              </div>
               
-              {/* title */}
-              {
-                !widgetSmallShow.value 
-                ? <span class="title">{props.widgetTitle}</span>
-                : ""
-              }
-            
+              {/* body */}
+              <div class="h-modal-body" ref={modalBody}>
+                {ctx.slots.widgetBody?.()}
+              </div>  
+              
+              {/* footer */}
+              
+              <div class="widget-footer">
+                {
+                  !widgetBigShow.value ? 
+                  <img
+                    class="widget-resize"
+                    onMousedown ={mousedownResize}
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAAAtUlEQVR42mL8//8/AyUAIICYGCgEAAFEtAFnz551AuKTQJyALA4QQKS4oA6IzYC4C1kQIIBIMWAZEP+F0nAAEECMlAYiQACx4PMzkGoH4unGxsYLZs2aBeenpaUtgKkDCCAmEvyMNQwAAoiJBD9jDQOAAKI4DAACiAlXPKenpzsB8UkgBvMZGRmdgPgkEKOkA4AAYiLBz1jDACCAmEjwM9YwAAggisMAIIAozkwAAUSxAQABBgCBl0L7jJdTdgAAAABJRU5ErkJggg=="
+                  /> : ""
+                }
+                <div class="frame" v-show={is_moving}></div>
+              </div>
+
             </div>
-
-            {/* header 操作按钮 */}
-            <div class="handleDom">
-              { props.widgetMinShow ? <span onClick={widgetSmall}>最小化</span> : "" }
-              { widgetNormalShow.value ? <span onClick={widgetBig}>最大化</span> : "" }
-              { widgetBigShow.value ? <span onClick={widgetNormal}>还原</span> : "" }
-              <span onClick={widgetClose}>关闭</span>
-            </div>
             
-            {/* body */}
-            <div class="h-modal-body" ref={modalBody}>
-              {ctx.slots.widgetBody?.()}
-            </div>  
-            
-            {/* footer */}
-            
-            <div class="widget-footer">
-              {
-                !widgetBigShow.value ? 
-                <img
-                  class="widget-resize"
-                  onMousedown ={mousedownResize}
-                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VGAAAAtUlEQVR42mL8//8/AyUAIICYGCgEAAFEtAFnz551AuKTQJyALA4QQKS4oA6IzYC4C1kQIIBIMWAZEP+F0nAAEECMlAYiQACx4PMzkGoH4unGxsYLZs2aBeenpaUtgKkDCCAmEvyMNQwAAoiJBD9jDQOAAKI4DAACiAlXPKenpzsB8UkgBvMZGRmdgPgkEKOkA4AAYiLBz1jDACCAmEjwM9YwAAggisMAIIAozkwAAUSxAQABBgCBl0L7jJdTdgAAAABJRU5ErkJggg=="
-                /> : ""
-              }
-              <div class="frame" v-show={is_moving.value}></div>
-            </div>
+            { is_showMask.value ? <div class="h-modal-mask" ref={maskDom} ></div> : ""}
+            { props.widgetShowMask ? <div class="h-modal-bgMask" ></div> : ""}
 
-          </div>
-          
-          { is_showMask ? <div class="h-modal-mask" ref={maskDom} ></div> : ""}
-          { props.widgetShowMask ? <div class="h-modal-bgMask" ></div> : ""}
-
-      </div>
-    )
-
-  }
+        </div>
+      )
+    }
+  },
+  // render() {
+  //   console.log(this.$props);
+  //   return <div>123</div>
+  // }     
 })
