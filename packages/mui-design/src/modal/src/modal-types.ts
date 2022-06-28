@@ -35,20 +35,29 @@ export const modalProps = {
     type: Object,
     default: () => {
       return {
-        defaultW: null, // 默认地图宽度
-        defaultH: null, // 不设置高度
-        maxW: null, // 默认地图宽度
-        maxH: null, // 默认地图高度
-        minW: null, // 默认150
-        minH: null // 默认150
+        defaultW: 500, 
+        defaultH: 300, 
+        defaultDomId:"", // 可选,如果有参考DOM 可传入,覆盖默认的宽高
+        maxW: 800, 
+        maxH: 500,
+        maxDomId:"", // 可选, 如果有参考DOM 可传入,覆盖默认的最大宽高
+        minW: 150, 
+        minH: 150,
       };
     }
   },
-  // 顶部-头DOM id
-  getDocTopdomid: {
-    type: String,
-    default: "common-header"
+  position:{
+    type: Object,
+    default: () => {
+      return {
+        defaultX: 240, 
+        defaultY: 200, 
+        maxX: 240, 
+        maxY: 200
+      };
+    }
   },
+
   // 左侧-菜单DOM id
   getDocLeftdomid: {
     type: String,

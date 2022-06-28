@@ -16,15 +16,13 @@
   <button @click="open({'type':'formView','id':'1','displayName':'fv1','stopWorkspaceLeft':true})">
     fromView1-靠左
   </button>
-  <button @click="open({'type':'formView','id':'2','displayName':'fv2','stopDocBottom':true})">
-    fromView2-靠下
-  </button>
-{{isShow}}
+  <div id="idds" style="width:800px;height:600px">123</div>
+  {{isShow}}
   <m-modal 
     :widgetShowProps="isShow"
     @widgetSmall ="widgetSmall"
     @widgetClose="widgetClose"
-    :widgetSize = "{defaultW:500,defaultH:300,maxH:500}"
+    :widgetSize = "{defaultW:500,defaultH:300,maxDomId:'idds'}"
     >
     <template #widgetBody>
       <div sytle="width:100px;">555</div>
