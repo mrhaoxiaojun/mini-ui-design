@@ -63,10 +63,7 @@ export const useMoveable = (props: ModalProps, ctx: SetupContext<Record<string, 
     frameDiv.value = event.target.nextElementSibling; // 线框dom
     headerHeight.value = modalHeader.value.offsetHeight; // modal header height
     is_moving.value = true;
-    // 配置靠底部，拖拽需要设置top默认值
-    if (props.stopDocBottom) {
-      (await getDom()).top = `${(await getDom("h-modal-widget", "offsetTop"))}px`;
-    }
+
     // 得到点击时该地图容器的宽高：
     targetDivWidth.value = targetDiv.value.offsetWidth;
     targetDivHeight.value = targetDiv.value.offsetHeight;
@@ -90,19 +87,19 @@ export const useMoveable = (props: ModalProps, ctx: SetupContext<Record<string, 
     frameDiv.value.style.width = targetDivWidth.value + distX + "px";
     frameDiv.value.style.height = targetDivHeight.value + distY + "px";
     // 设置最小范围：不能无限制缩放，影响体验
-    if (parseInt(frameDiv.value.style.width) <= props.widgetSize.minW) {
-      frameDiv.value.style.width = props.widgetSize.minW + "px";
+    if (parseInt(frameDiv.value.style.width) <= props.size.minW) {
+      frameDiv.value.style.width = props.size.minW + "px";
     }
-    if (parseInt(frameDiv.value.style.height) <= props.widgetSize.minH) {
-      frameDiv.value.style.height = props.widgetSize.minH + "px";
+    if (parseInt(frameDiv.value.style.height) <= props.size.minH) {
+      frameDiv.value.style.height = props.size.minH + "px";
     }
 
     // 最大范围
-    // if (parseInt(frameDiv.value.style.width) >= props.widgetSize.maxW) {
-    //   frameDiv.value.style.width = props.widgetSize.maxW + 'px'
+    // if (parseInt(frameDiv.value.style.width) >= props.size.maxW) {
+    //   frameDiv.value.style.width = props.size.maxW + 'px'
     // }
-    // if (parseInt(frameDiv.value.style.height) >= props.widgetSize.maxH) {
-    //   frameDiv.value.style.height = props.widgetSize.maxH + 'px'
+    // if (parseInt(frameDiv.value.style.height) >= props.size.maxH) {
+    //   frameDiv.value.style.height = props.size.maxH + 'px'
     // }
   }
 
@@ -112,8 +109,8 @@ export const useMoveable = (props: ModalProps, ctx: SetupContext<Record<string, 
     modalBody.value.style.height = `${frameDiv.value.offsetHeight - headerHeight.value}px`;
 
     // resize 事件回调
-    ctx.emit("widgetResize", {
-      event: event,
+    ctx.emit("modalResize", {
+      event: e,
       data: props.data,
       size: {
         width: frameDiv.value.style.width,

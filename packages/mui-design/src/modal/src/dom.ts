@@ -3,7 +3,7 @@
  * @Date: 2022-06-20 10:38:19
  * @Description: 关于DOM的函数
  * @LastEditors: haoxiaojun
- * @LastEditTime: 2022-06-28 10:15:19
+ * @LastEditTime: 2022-06-28 14:13:32
  */
 
 import { ref, reactive ,nextTick} from 'vue';
@@ -27,11 +27,12 @@ export const modalDom = ref()
  * @param {*} attr
  * @return {*}
  */
-export const getDom = async (className = "h-modal-widget", attr = "style") : Promise<any> => {
+export const getDom = async (className = "m-modal", attr = "style") : Promise<any> => {
   await nextTick()
   console.log(modalDom.value);
+  console.log(modalDom.value.getElementsByClassName(className));
   
-  return modalDom.value?.getElementsByClassName(className)[0][attr];
+  return modalDom.value.getElementsByClassName(className)[0][attr];
 }
 
 /**

@@ -1,5 +1,5 @@
-.h-modal-widget-wrap{
-  .h-modal-widget{
+.m-modal-wrap{
+  .m-modal{
     position: fixed;
     z-index: 1001;
     background-color: #fff;
@@ -8,9 +8,9 @@
     background-clip: padding-box;
     box-shadow: 0 4px 12px rgba(0,0,0,.15)
   }
-  .widget-wrap{
+  .modal-wrap{
     word-break: break-word;
-    .widget-footer .widget-resize{
+    .modal-footer .modal-resize{
       position: absolute;
       width: 15px;
       height: 15px;
@@ -26,12 +26,12 @@
       border:1px dashed #000;
       border-radius: 4px;
     }
-    .h-modal-body{
+    .m-modal-body{
       overflow: auto;
       padding:5px;
       height: calc(100% - 24px);
     }
-    .widgetHead{
+    .modalHead{
       position: relative;
       background: #409eff;
       border-radius: 0px;
@@ -61,7 +61,7 @@
         }
     }
   }
-  .h-modal-mask{
+  .m-modal-mask{
     position: fixed;
     top: 0;
     bottom: 0;
@@ -72,7 +72,7 @@
     z-index: 1000;
     pointer-events: none
   }
-  .h-modal-bgMask{
+  .m-modal-bgMask{
     position: fixed;
     overflow: hidden;
     top: 0;

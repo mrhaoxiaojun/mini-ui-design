@@ -19,12 +19,12 @@
   <div id="idds" style="width:800px;height:600px">123</div>
   {{isShow}}
   <m-modal 
-    :widgetShowProps="isShow"
-    @widgetSmall ="widgetSmall"
-    @widgetClose="widgetClose"
-    :widgetSize = "{defaultW:500,defaultH:300,maxDomId:'idds'}"
+    :isShow="isShow"
+    @modalSmall ="modalSmall"
+    @modalClose="modalClose"
+    :size = "{defaultW:500,defaultH:300,maxDomId:'idds'}"
     >
-    <template #widgetBody>
+    <template #modalBody>
       <div sytle="width:100px;">555</div>
       <p>222</p> 
      </template>
@@ -40,10 +40,10 @@ let isShow = ref(false)
 const open = (data)=>{
   isShow.value = true
 }
-const widgetSmall = (data)=>{
+const modalSmall = (data)=>{
   isShow.value = false
 }
-const widgetClose = (data)=>{
+const modalClose = (data)=>{
   isShow.value = false
 }
 
