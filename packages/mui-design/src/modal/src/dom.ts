@@ -3,20 +3,20 @@
  * @Date: 2022-06-20 10:38:19
  * @Description: 关于DOM的函数
  * @LastEditors: haoxiaojun
- * @LastEditTime: 2022-06-28 14:13:32
+ * @LastEditTime: 2022-10-28 10:29:42
  */
 
-import { ref, reactive ,nextTick} from 'vue';
+import { ref ,nextTick} from 'vue';
 
 /**
  * @description: 位置信息
  * @return {*}
  */
-export let oldLocate = reactive({
-  left: 0,
-  top: 0,
-  width: 0,
-  height: 0
+export let oldLocate = ref(<any>{
+  left:0 || "",
+  top: 0 || "",
+  width: 0 || "",
+  height: 0 || ""
 })
 
 export const modalDom = ref()
@@ -29,8 +29,7 @@ export const modalDom = ref()
  */
 export const getDom = async (className = "m-modal", attr = "style") : Promise<any> => {
   await nextTick()
-  console.log(modalDom.value);
-  console.log(modalDom.value.getElementsByClassName(className));
+  // console.log(modalDom.value.getElementsByClassName(className));
   
   return modalDom.value.getElementsByClassName(className)[0][attr];
 }

@@ -1,6 +1,6 @@
-import { defineComponent, ref, reactive ,watch} from 'vue';
+import { defineComponent, ref, reactive ,watch,onMounted} from 'vue';
 import { modalProps, ModalProps } from './modal-types'
-import { oldLocate, modalDom, getDom, getLocate } from "./dom";
+import { modalDom, getDom, getLocate,oldLocate } from "./dom";
 import { useMoveable } from './use-moveable';
 import './modal.scss'
 
@@ -13,15 +13,13 @@ export default defineComponent({
     let modalSmallShow = ref(false)
     let modalBigShow = ref(false)
     let modalNormalShow = ref(true)
-    let is_showMask = ref(false)
+    let is_showMask = ref(true)
     let modalShow = ref(props.isShow)
     let modalSizes = reactive(props.size)
+
     // onMounted(async () => {
-    //   if(modalShow.value){
-    //     computedSize()
-    //     computedLocate()
-    //   }
     // })
+
     const {
       is_moving,
       modalDomInner,
@@ -35,7 +33,17 @@ export default defineComponent({
     watch(() => props.isShow, (newValue, oldValue) => {
       modalShow.value = newValue
       if(modalShow.value){
+        
+        // 全局设置多窗体的Id，每次弹出都会获得唯一的Id
+        let pandaCurrentModalId = Number(window.sessionStorage.getItem('pandaCurrentModalId') || 0)
+        pandaCurrentModalId = pandaCurrentModalId +1 
+        window.sessionStorage.setItem('pandaCurrentModalId', pandaCurrentModalId.toString())
+        
+        // 初始化操作按钮状态
+        modalNormalShow.value = true;
+        // 初始化尺寸计算
         computedSize()
+        // 初始化位置计算
         computedLocate()
       }
     })
@@ -45,9 +53,9 @@ export default defineComponent({
      * @return {*}
      */
     const modalClose = () => {
-      modalSmallShow.value = false;
-      modalBigShow.value = false;
-      modalNormalShow.value = false;
+      // modalSmallShow.value = false;
+      // modalBigShow.value = false;
+      // modalNormalShow.value = false;
       modalShow.value = false;
       ctx.emit("modalClose");
     }
@@ -70,7 +78,9 @@ export default defineComponent({
      */
     const modalBig = async (event:Event)=> {
 
-      getLocate();
+      await getLocate();
+      console.log(oldLocate);
+      
 
       modalNormalShow.value = false;
       modalSmallShow.value = false;
@@ -81,6 +91,8 @@ export default defineComponent({
       modalDom.top = `${props.position.maxY }px`;
       modalDom.width = `${modalSizes.maxW}px`;
       modalDom.height = `${modalSizes.maxH}px`;
+
+      console.log(modalDom);
 
       // m-modal-body 重置最大
       (await getDom("m-modal-body")).height = `${modalSizes.maxH - 24}px`;
@@ -101,18 +113,21 @@ export default defineComponent({
      */
     const modalNormal = async (event:Event)=> {
       const modalDom = await getDom()
-        
+      
       modalDom.left = oldLocate.left;
       modalDom.top = oldLocate.top;
-      modalDom.width = modalSizes.defaultW = oldLocate.width;
+      modalDom.width = oldLocate.width;
+      // modalDom.width = modalSizes.defaultW = oldLocate.width;
       modalDom.height = oldLocate.height;
       (await getDom("m-modal-body")).height  = oldLocate.height
-        // ? `${Number(oldLocate.height.split("p")[0]) - 24}px`.......?
         ? `${Number(oldLocate.height) - 24}px`
         : "auto";
+        console.log(modalDom.width);
+        console.log(modalDom.height);
+        
       modalNormalShow.value = true;
-      modalSmallShow.value = false;
-      modalBigShow.value = false;
+      // modalSmallShow.value = false;
+      // modalBigShow.value = false;
       ctx.emit("modalResize", {
         event: event,
         data: props.data,
@@ -130,8 +145,9 @@ export default defineComponent({
     const computedSize= async ()=> {
       
       // 处理默认宽高
-      let defaultW = null
-      let defaultH = null
+      let defaultW = 500
+      let defaultH = 300
+      console.log(modalSizes);
 
       if( modalSizes.defaultDomId){
         let defaultDom = document.getElementById(modalSizes.defaultDomId)
@@ -140,21 +156,21 @@ export default defineComponent({
       }
 
       const modalDom = await getDom()
-      modalDom.width = `${modalSizes.defaultDomId ? defaultW: modalSizes.defaultW}px`;
-      modalDom.height = `${modalSizes.defaultDomId ? defaultH : modalSizes.defaultH}px`;
+      modalDom.width = `${modalSizes.defaultW ? modalSizes.defaultW: defaultW}px`;
+      modalDom.height = `${modalSizes.defaultH ? modalSizes.defaultH : defaultH}px`;
       
-
+    
       // 处理最大宽高
-      let maxW = null
-      let maxH = null
+      let maxW = 800
+      let maxH = 500
 
       if( modalSizes.maxDomId ){
         let maxDom = document.getElementById(modalSizes.maxDomId)
         maxW = Number(maxDom?.offsetWidth) - 20
         maxH = Number(maxDom?.offsetHeight) - 20
       }
-      modalSizes.maxW = modalSizes.maxDomId ? maxW : modalSizes.maxW
-      modalSizes.maxH = modalSizes.maxDomId ? maxH : modalSizes.maxH
+      modalSizes.maxW = modalSizes.maxW ? modalSizes.maxW : maxW
+      modalSizes.maxH = modalSizes.maxH ? modalSizes.maxH : maxH
 
       // 最小宽高不做出处理默认150*150
 
@@ -195,7 +211,7 @@ export default defineComponent({
             <div class="handleDom">
               { props.isShowMin ? <span onClick={modalSmall}>最小化</span> : "" }
               { modalNormalShow.value ? <span onClick={modalBig}>最大化</span> : "" }
-              { modalBigShow.value ? <span onClick={modalNormal}>还原</span> : "" }
+              { !modalNormalShow.value ? <span onClick={modalNormal}>还原</span> : "" }
               <span onClick={modalClose}>关闭</span>
             </div>
             
@@ -208,7 +224,7 @@ export default defineComponent({
             
             <div class="modal-footer">
               {
-                !modalBigShow.value ? 
+                modalNormalShow.value ? 
                 <img
                   class="modal-resize"
                   onMousedown ={handleResizeStart}
