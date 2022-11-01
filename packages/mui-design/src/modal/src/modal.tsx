@@ -1,4 +1,4 @@
-import { defineComponent, ref, reactive ,watch,onMounted} from 'vue';
+import { defineComponent, ref, reactive, watch, nextTick } from 'vue';
 import { modalProps, ModalProps } from './modal-types'
 import { modalDom, getDom, getLocate,oldLocate } from "./dom";
 import { useMoveable } from './use-moveable';
@@ -17,9 +17,6 @@ export default defineComponent({
     let modalShow = ref(props.isShow)
     let modalSizes = reactive(props.size)
 
-    // onMounted(async () => {
-    // })
-
     const {
       is_moving,
       modalDomInner,
@@ -30,14 +27,20 @@ export default defineComponent({
       handleResizeStart,
     } = useMoveable(props, ctx);
     
+    /**
+     * @description: 监控弹窗状态
+     * @param {*} props
+     * @param {*} param2
+     * @return {*}
+     */
     watch(() => props.isShow, (newValue, oldValue) => {
       modalShow.value = newValue
       if(modalShow.value){
         
         // 全局设置多窗体的Id，每次弹出都会获得唯一的Id
-        let pandaCurrentModalId = Number(window.sessionStorage.getItem('pandaCurrentModalId') || 0)
-        pandaCurrentModalId = pandaCurrentModalId +1 
-        window.sessionStorage.setItem('pandaCurrentModalId', pandaCurrentModalId.toString())
+        let muiModalCurrentId = Number(window.sessionStorage.getItem('muiModalCurrentId') || 0)
+        muiModalCurrentId = muiModalCurrentId +1 
+        window.sessionStorage.setItem('muiModalCurrentId', muiModalCurrentId.toString())
         
         // 初始化操作按钮状态
         modalNormalShow.value = true;
@@ -45,6 +48,8 @@ export default defineComponent({
         computedSize()
         // 初始化位置计算
         computedLocate()
+        // 初始化zIndex层级
+        initZindex()
       }
     })
 
@@ -182,6 +187,19 @@ export default defineComponent({
       const modalDom = await getDom()
       modalDom.left = `${props.position.defaultX }px`;
       modalDom.top= `${props.position.defaultY }px`;
+    }
+
+    /**
+     * @description: 初始化z-index
+     * @return {*}
+     */
+    const initZindex = async()=>{
+      let muiModalZindex = window.sessionStorage.getItem('muiModalZindex')
+      if(muiModalZindex){
+        window.sessionStorage.setItem('muiModalZindex',JSON.stringify(JSON.parse(muiModalZindex) + 1))
+        await nextTick()
+        modalDomInner.value.style.zIndex = JSON.stringify(JSON.parse(muiModalZindex) + 1)
+      }
     }
    
     return () => (

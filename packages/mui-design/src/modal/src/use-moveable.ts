@@ -1,6 +1,6 @@
 
 import { ref, SetupContext } from 'vue';
-import { on, off, getDom } from "./dom";
+import { on, off } from "./dom";
 import { ModalProps } from './modal-types';
 
 export const useMoveable = (props: ModalProps, ctx: SetupContext<Record<string, any>>) => {
@@ -12,6 +12,7 @@ export const useMoveable = (props: ModalProps, ctx: SetupContext<Record<string, 
   const modalHeader = ref()
   const modalBody = ref()
   const maskDom = ref()
+  const currentDom = ref()
 
   let moveStartX = ref()
   let moveStartY = ref()
@@ -24,34 +25,42 @@ export const useMoveable = (props: ModalProps, ctx: SetupContext<Record<string, 
   let targetDivHeight = ref()
  
   const handleMoveStart = (event: any) => {
+    currentDom.value = event.target.parentNode
     dragging.value = true;
     // 鼠标的位置,参照modal左上角
     moveStartX.value = event.clientX - modalDomInner.value.offsetLeft;
     moveStartY.value = event.clientY - modalDomInner.value.offsetTop;
+    // 提高层级
+    getModalZindex()
+    
     on(window, "mousemove", handleMoveMove);
     on(window, "mouseup", handleMoveEnd);
   }
 
   const handleMoveMove = async (event: any) => {
+
     if (!dragging.value) return false;
     maskDom.value.style["pointer-events"] = "all";
     event.preventDefault();
     // 得到鼠标拖动的x,y距离
     let distX = event.clientX - moveStartX.value;
     let distY = event.clientY - moveStartY.value;
-    (await getDom()).left = distX + "px";
-    (await getDom()).top = distY + "px";
+
+    currentDom.value.style.left = distX + "px";
+    currentDom.value.style.top = distY + "px";
+  
   }
   
-  const handleMoveEnd = async () => {
+  const handleMoveEnd = async (event:any) => {
+   
     dragging.value = false;
     maskDom.value.style["pointer-events"] = "none";
     // 处理上下边界
-    if (Number((await getDom()).top.split("p")[0]) <= 0) {
-      (await getDom()).top = 0;
+    if (Number(currentDom.value.style.top.split("p")[0]) <= 0) {
+      currentDom.value.style.top = 0;
     }
-    if (Number((await getDom()).top.split("p")[0]) >= document.body.clientHeight) {
-      (await getDom()).top = `${document.body.clientHeight - 50}px`;
+    if (Number(currentDom.value.style.top.split("p")[0]) >= document.body.clientHeight) {
+      currentDom.value.style.top = `${document.body.clientHeight - 50}px`;
     }
     off(window, "mousemove", handleMoveMove);
     off(window, "mouseup", handleMoveEnd);
@@ -124,6 +133,16 @@ export const useMoveable = (props: ModalProps, ctx: SetupContext<Record<string, 
     off(window, "mouseup", handleResizeUp);
   }
 
+  const getModalZindex = () =>{
+    let muiModalZindex = window.sessionStorage.getItem('muiModalZindex')
+    if(muiModalZindex){
+      let zIndex = JSON.parse(muiModalZindex) + 1
+      window.sessionStorage.setItem('muiModalZindex',JSON.stringify(zIndex))
+      currentDom.value.style.zIndex = zIndex
+    }else{
+      window.sessionStorage.setItem('muiModalZindex',JSON.stringify(1001))
+    }
+  }
   return {
     is_moving,
     modalDomInner,

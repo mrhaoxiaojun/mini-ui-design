@@ -13,19 +13,19 @@
 
 ```vue
 <template>
-  <button @click="open1({})">test1 普通窗体</button> <br><br>
+  <button @click="open1({title:'普通窗体'})">test1 普通窗体 ( 默认宽高500*300 ) </button> <br><br>
 
-  <button @click="open2({})">test2 模拟其他盒子高度</button><br><br>
+  <button @click="open2({title:'模拟其他盒子最大宽度'})">test2 模拟其他盒子最大宽度 ( 模拟体800*200 ) </button><br><br>
   
   <div id="testId" style="width:800px;height:200px;background:#000;color:#fff;text-align:center;padding-top:50px;">模拟其他盒子的宽高为窗体的最大宽高 (模拟体800*200)</div><br><br>
 
-  <button @click="open({})">test3 循环数据窗体需求</button>
+  <button @click="open3({title:'循环窗体头部1',type:'FromView'})">test3 循环数据窗体需求</button>
   
-  <button @click="open({})">test3 循环数据窗体需求</button>
+  <button @click="open3({title:'循环窗体头部2',type:'FromView'})">test3 循环数据窗体需求</button>
   
 
 
-  // 普通窗体
+   <!--普通窗体 -->
   <m-modal 
     :isShow="isShow1"
     title='普通窗体'
@@ -35,11 +35,11 @@
     >
     <template #modalBody>
       <div sytle="width:100px;">555</div>
-      <p>222</p> 
+      <p>普通窗体</p> 
      </template>
   </m-modal>
 
-  // 模拟其他盒子高度
+  <!--模拟其他盒子高度-->
   <m-modal 
     :isShow="isShow2"
     title='模拟其他盒子高度'
@@ -48,22 +48,53 @@
     :size = "{maxDomId:'testId'}"
     >
     <template #modalBody>
-      <div sytle="width:100px;">555</div>
-      <p>222</p> 
+      <div sytle="width:100px;">123</div>
+      <p>模拟其他盒子高度</p> 
      </template>
   </m-modal>
+
+  <!--循环同种数据类型窗体Demo-->
+  <m-modal 
+    v-for="(item,index) in modalData.FromView" :key="index"
+    :isShow="item.isShow"
+    :title='item.title'
+    @modalSmall ="item.modalSmall"
+    @modalClose="item.modalClose"
+    :size = "{defaultW:500,defaultH:300}"
+    >
+    <template #modalBody>
+      <div sytle="width:100px;">123</div>
+      <p>循环数据窗体需求</p> 
+     </template>
+  </m-modal>
+
 </template>
 
 <script setup>
 
-import {ref } from 'vue'
-  
+import {ref,nextTick } from 'vue'
+
 let isShow1 = ref(false)
 let isShow2 = ref(false)
 let isShow3 = ref(false)
+let modalData = ref({
+  FromView:[],
+  TableView:[]
+})
 
-const open1 = (data)=>{
+
+const open1 = async (data) =>{
+
+  // 显示模态框
   isShow1.value = true
+  // 等待多窗体出厂Id序列配置完成
+  await nextTick()
+  // 获取全局多窗体唯一标识
+  data.id = window.sessionStorage.getItem('muiModalCurrentId')
+  console.log(data)
+  // 存储全局多窗体唯一标识
+  setModalId(data.id)
+
 }
 const modalSmall1 = (data)=>{
   isShow1.value = false
@@ -73,8 +104,16 @@ const modalClose1 = (data)=>{
 }
 
 
-const open2 = (data)=>{
+const open2 = async (data)=>{
+
   isShow2.value = true
+   // 等待多窗体出厂Id序列配置完成
+  await nextTick()
+  // 获取全局多窗体唯一标识
+  data.id = window.sessionStorage.getItem('muiModalCurrentId')
+  // 存储全局多窗体唯一标识
+  setModalId(data.id)
+
 }
 const modalSmall2 = (data)=>{
   isShow2.value = false
@@ -84,37 +123,66 @@ const modalClose2 = (data)=>{
 }
 
 
-const open = (data)=>{
-  isShow.value = true
+const open3 = async (data)=>{
+  // isShow.value = true
 
-   if(!this.getIncludeId(this.viewData[data.type],data)) {
+  //  if(!this.getIncludeId(this.viewData[data.type],data)) {
     // 从入口打开modal开始计数
-    this.modalTotal(this.modalCount++)
+    // this.modalTotal(this.modalCount++)
     // 将参数传给子View
+
+
+   // 等待多窗体出厂Id序列配置完成
+    await nextTick()
+    // 获取全局多窗体唯一标识
+    data.id = window.sessionStorage.getItem('muiModalCurrentId')
+    // 存储全局多窗体唯一标识
+    setModalId(data.id)
+    // 打开窗体
     data.isShow = true
-    // 关闭回调-hxj
-    data.widgetClose= (type,index)=>{
-        // 每关闭一个modal做减法
-      // this.modalTotal(this.modalCount--)
+    // 关闭回调
+    data.modalClose= (type,index)=>{
       // - bar状态
-      this.viewStatusBar.forEach((ele,i,ary)=>{
-        ele.feMainId === this.viewData[type][index].feMainId && ary.splice(i,1)
-      })
-      this.viewData[type].splice(index,1)
+      // this.viewStatusBar.forEach((ele,i,ary)=>{
+      //   ele.feMainId === this.viewData[type][index].feMainId && ary.splice(i,1)
+      // })
+      // this.viewData[type].splice(index,1)
 
     }
     // 最小化回调-hxj
-    data.widgetSmall = (arr) => {
+    data.modalSmall = (arr) => {
       // + bar状态
-      !this.dealRepeat(arr,"feMainId") && this.viewStatusBar.push(arr)
+      // !this.dealRepeat(arr,"feMainId") && this.viewStatusBar.push(arr)
     }
-    // 类型不同或相同的窗体 - 前端自定义所有子已经显的窗体添加主键id--用来唯一性区分
-    data.feMainId = `${data.type}-${data.displayName}#${Date.parse(new Date())}`
     // 给对应类型窗体添加显示数据
-    this.viewData[data.type].push(data)
-  }
+    modalData.value[data.type].push(data)
+  // }
   
 }
+const setModalId = (id)=>{
+  
+  // 获取id集合
+  let muiModalIdsList = window.sessionStorage.getItem('muiModalIdsList')
+  
+  // 没有id集合
+  if(!muiModalIdsList){
+    window.sessionStorage.setItem('muiModalIdsList',JSON.stringify([id]))
+    return;
+  }
+  // 有id集合
+  muiModalIdsList = JSON.parse(muiModalIdsList)
+  if(!muiModalIdsList.includes(id)){
+    // 去重
+    muiModalIdsList.push(id)
+    window.sessionStorage.setItem('muiModalIdsList',JSON.stringify(muiModalIdsList))
+  }
+}
+// const modalSmall3 = (data)=>{
+//   isShow3.value = false
+// }
+// const modalClose3 = (data)=>{
+//   isShow3.value = false
+// }
 
 
 </script>
