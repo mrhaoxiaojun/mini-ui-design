@@ -28,6 +28,7 @@
    <!--普通窗体 -->
   <m-modal 
     :isShow="isShow1"
+    :id="id1"
     title='普通窗体'
     @modalSmall ="modalSmall1"
     @modalClose="modalClose1"
@@ -42,6 +43,7 @@
   <!--模拟其他盒子高度-->
   <m-modal 
     :isShow="isShow2"
+    :id="id2"
     title='模拟其他盒子高度'
     @modalSmall ="modalSmall2"
     @modalClose="modalClose2"
@@ -77,6 +79,8 @@ import {ref,nextTick } from 'vue'
 let isShow1 = ref(false)
 let isShow2 = ref(false)
 let isShow3 = ref(false)
+let id1 = ref()
+let id2 = ref()
 let modalData = ref({
   FromView:[],
   TableView:[]
@@ -84,14 +88,13 @@ let modalData = ref({
 
 
 const open1 = async (data) =>{
-
   // 显示模态框
   isShow1.value = true
   // 等待多窗体出厂Id序列配置完成
   await nextTick()
   // 获取全局多窗体唯一标识
   data.id = window.sessionStorage.getItem('muiModalCurrentId')
-  console.log(data)
+  id1.value = data.id
   // 存储全局多窗体唯一标识
   setModalId(data.id)
 
@@ -111,6 +114,7 @@ const open2 = async (data)=>{
   await nextTick()
   // 获取全局多窗体唯一标识
   data.id = window.sessionStorage.getItem('muiModalCurrentId')
+  id2.value = data.id
   // 存储全局多窗体唯一标识
   setModalId(data.id)
 
@@ -164,25 +168,20 @@ const setModalId = (id)=>{
   // 获取id集合
   let muiModalIdsList = window.sessionStorage.getItem('muiModalIdsList')
   
-  // 没有id集合
+  // 如果-没有id集合
   if(!muiModalIdsList){
+    console.log(id)
     window.sessionStorage.setItem('muiModalIdsList',JSON.stringify([id]))
     return;
   }
-  // 有id集合
+  // 如果-有id集合
   muiModalIdsList = JSON.parse(muiModalIdsList)
-  if(!muiModalIdsList.includes(id)){
+  // if(!muiModalIdsList.includes(id)){
     // 去重
-    muiModalIdsList.push(id)
-    window.sessionStorage.setItem('muiModalIdsList',JSON.stringify(muiModalIdsList))
-  }
+  muiModalIdsList.push(id)
+  window.sessionStorage.setItem('muiModalIdsList',JSON.stringify(muiModalIdsList))
+  // }
 }
-// const modalSmall3 = (data)=>{
-//   isShow3.value = false
-// }
-// const modalClose3 = (data)=>{
-//   isShow3.value = false
-// }
 
 
 </script>

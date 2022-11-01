@@ -1,3 +1,10 @@
+/*
+ * @Author: haoxiaojun
+ * @Date: 2022-06-16 22:28:43
+ * @Description: 多功能模态框，简称多窗体，支持最大、最小、关闭、拖拽、伸缩、边界回弹、多个窗体层叠弹出、全局识别维护唯一标识和层级
+ * @LastEditors: haoxiaojun
+ * @LastEditTime: 2022-11-01 18:49:31
+ */
 import { defineComponent, ref, reactive, watch, nextTick } from 'vue';
 import { modalProps, ModalProps } from './modal-types'
 import { modalDom, getDom, getLocate,oldLocate } from "./dom";
@@ -36,7 +43,7 @@ export default defineComponent({
     watch(() => props.isShow, (newValue, oldValue) => {
       modalShow.value = newValue
       if(modalShow.value){
-        
+
         // 全局设置多窗体的Id，每次弹出都会获得唯一的Id
         let muiModalCurrentId = Number(window.sessionStorage.getItem('muiModalCurrentId') || 0)
         muiModalCurrentId = muiModalCurrentId +1 
@@ -62,6 +69,7 @@ export default defineComponent({
       // modalBigShow.value = false;
       // modalNormalShow.value = false;
       modalShow.value = false;
+      removeModalId()
       ctx.emit("modalClose");
     }
     /**
@@ -201,9 +209,20 @@ export default defineComponent({
         modalDomInner.value.style.zIndex = JSON.stringify(JSON.parse(muiModalZindex) + 1)
       }
     }
+    
+    /**
+     * @description: 关闭窗体时，退出当前id
+     * @return {*}
+     */
+    const removeModalId = ()=>{
+      let currentId = modalDom.value.getAttribute("main-id")
+      let muiModalIdsList = JSON.parse(window.sessionStorage.getItem('muiModalIdsList') as string)
+      muiModalIdsList.splice(muiModalIdsList.indexOf(currentId),1)
+      window.sessionStorage.setItem('muiModalIdsList',JSON.stringify(muiModalIdsList)) 
+    }
    
     return () => (
-      modalShow.value && <div class="m-modal-wrap" ref={modalDom} >
+      modalShow.value && <div class="m-modal-wrap" ref={modalDom} main-id={props.id}>
           <div
             ref={modalDomInner}
             class={`m-modal ${ modalSmallShow.value ? 'modal-wrap modalSmall':'modal-wrap'}`}

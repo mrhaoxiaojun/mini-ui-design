@@ -11,6 +11,11 @@ export const modalProps = {
     type: Boolean,
     default: true
   },
+  // 窗体id
+  id: {
+    type: String,
+    default: ""
+  },
   // 是否显示遮罩
   mask:{
     type: Boolean,
