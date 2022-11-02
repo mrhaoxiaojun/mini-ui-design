@@ -26,8 +26,8 @@
 
 
    <!--普通窗体 -->
-  <m-modal 
-    :isShow="isShow1"
+  <m-modal
+    v-if="isShow1"
     :id="id1"
     title='普通窗体'
     @modalSmall ="modalSmall1"
@@ -42,7 +42,7 @@
 
   <!--模拟其他盒子高度-->
   <m-modal 
-    :isShow="isShow2"
+    v-if="isShow2"
     :id="id2"
     title='模拟其他盒子高度'
     @modalSmall ="modalSmall2"
@@ -58,7 +58,7 @@
   <!--循环同种数据类型窗体Demo-->
   <m-modal 
     v-for="(item,index) in modalData.FromView" :key="index"
-    :isShow="item.isShow"
+    :id="item.id"
     :title='item.title'
     @modalSmall ="item.modalSmall"
     @modalClose="item.modalClose"
@@ -88,14 +88,15 @@ let modalData = ref({
 
 
 const open1 = async (data) =>{
-  // 显示模态框
+  // 1、显示模态框
   isShow1.value = true
-  // 等待多窗体出厂Id序列配置完成
+  // 2、等待多窗体出厂Id序列配置完成
   await nextTick()
-  // 获取全局多窗体唯一标识
+  // 3、获取全局多窗体唯一标识
   data.id = window.sessionStorage.getItem('muiModalCurrentId')
+  // 4、设置唯一标识到窗体上
   id1.value = data.id
-  // 存储全局多窗体唯一标识
+  // 5、存储全局多窗体唯一标识统一管理
   setModalId(data.id)
 
 }
@@ -108,14 +109,15 @@ const modalClose1 = (data)=>{
 
 
 const open2 = async (data)=>{
-
+  // 1、显示模态框
   isShow2.value = true
-   // 等待多窗体出厂Id序列配置完成
+  // 2、等待多窗体出厂Id序列配置完成
   await nextTick()
-  // 获取全局多窗体唯一标识
+  // 3、获取全局多窗体唯一标识
   data.id = window.sessionStorage.getItem('muiModalCurrentId')
+  // 4、设置唯一标识到窗体上
   id2.value = data.id
-  // 存储全局多窗体唯一标识
+  // 5、存储全局多窗体唯一标识
   setModalId(data.id)
 
 }
@@ -128,22 +130,12 @@ const modalClose2 = (data)=>{
 
 
 const open3 = async (data)=>{
-  // isShow.value = true
 
   //  if(!this.getIncludeId(this.viewData[data.type],data)) {
     // 从入口打开modal开始计数
     // this.modalTotal(this.modalCount++)
     // 将参数传给子View
 
-
-   // 等待多窗体出厂Id序列配置完成
-    await nextTick()
-    // 获取全局多窗体唯一标识
-    data.id = window.sessionStorage.getItem('muiModalCurrentId')
-    // 存储全局多窗体唯一标识
-    setModalId(data.id)
-    // 打开窗体
-    data.isShow = true
     // 关闭回调
     data.modalClose= (type,index)=>{
       // - bar状态
@@ -160,6 +152,12 @@ const open3 = async (data)=>{
     }
     // 给对应类型窗体添加显示数据
     modalData.value[data.type].push(data)
+    // 等待多窗体出厂Id序列配置完成
+    await nextTick()
+    // 获取全局多窗体唯一标识
+    data.id = window.sessionStorage.getItem('muiModalCurrentId')
+    // 存储全局多窗体唯一标识
+    setModalId(data.id)
   // }
   
 }
@@ -176,11 +174,8 @@ const setModalId = (id)=>{
   }
   // 如果-有id集合
   muiModalIdsList = JSON.parse(muiModalIdsList)
-  // if(!muiModalIdsList.includes(id)){
-    // 去重
   muiModalIdsList.push(id)
   window.sessionStorage.setItem('muiModalIdsList',JSON.stringify(muiModalIdsList))
-  // }
 }
 
 

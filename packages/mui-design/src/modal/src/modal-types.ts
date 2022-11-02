@@ -9,7 +9,7 @@ export const modalProps = {
   // 是否显示modal
   isShow: {
     type: Boolean,
-    default: true
+    default: false
   },
   // 窗体id
   id: {

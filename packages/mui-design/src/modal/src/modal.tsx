@@ -3,9 +3,9 @@
  * @Date: 2022-06-16 22:28:43
  * @Description: 多功能模态框，简称多窗体，支持最大、最小、关闭、拖拽、伸缩、边界回弹、多个窗体层叠弹出、全局识别维护唯一标识和层级
  * @LastEditors: haoxiaojun
- * @LastEditTime: 2022-11-01 18:49:31
+ * @LastEditTime: 2022-11-02 17:54:41
  */
-import { defineComponent, ref, reactive, watch, nextTick } from 'vue';
+import { defineComponent, ref, reactive, watch, nextTick,onMounted} from 'vue';
 import { modalProps, ModalProps } from './modal-types'
 import { modalDom, getDom, getLocate,oldLocate } from "./dom";
 import { useMoveable } from './use-moveable';
@@ -34,42 +34,59 @@ export default defineComponent({
       handleResizeStart,
     } = useMoveable(props, ctx);
     
+    // 全局设置多窗体的Id，每次弹出都会获得唯一的Id
+    let muiModalCurrentId = Number(window.sessionStorage.getItem('muiModalCurrentId') || 0)
+    muiModalCurrentId = muiModalCurrentId +1 
+    window.sessionStorage.setItem('muiModalCurrentId', muiModalCurrentId.toString())
+    
+    onMounted( ()=>{
+      // 初始化操作按钮状态
+      modalNormalShow.value = true;
+      // 初始化尺寸计算
+      computedSize()
+      // 初始化位置计算
+      computedLocate()
+      // 初始化zIndex层级
+      initZindex()
+      
+    })
+    
     /**
      * @description: 监控弹窗状态
      * @param {*} props
      * @param {*} param2
      * @return {*}
      */
-    watch(() => props.isShow, (newValue, oldValue) => {
-      modalShow.value = newValue
-      if(modalShow.value){
+    // watch(
+    //   () => props.isShow, 
+    //   (newValue, oldValue) => {
+    //     modalShow.value = newValue
+    //     if(modalShow.value){
 
-        // 全局设置多窗体的Id，每次弹出都会获得唯一的Id
-        let muiModalCurrentId = Number(window.sessionStorage.getItem('muiModalCurrentId') || 0)
-        muiModalCurrentId = muiModalCurrentId +1 
-        window.sessionStorage.setItem('muiModalCurrentId', muiModalCurrentId.toString())
-        
-        // 初始化操作按钮状态
-        modalNormalShow.value = true;
-        // 初始化尺寸计算
-        computedSize()
-        // 初始化位置计算
-        computedLocate()
-        // 初始化zIndex层级
-        initZindex()
-      }
-    })
+    //       // 全局设置多窗体的Id，每次弹出都会获得唯一的Id
+    //       let muiModalCurrentId = Number(window.sessionStorage.getItem('muiModalCurrentId') || 0)
+    //       muiModalCurrentId = muiModalCurrentId +1 
+    //       window.sessionStorage.setItem('muiModalCurrentId', muiModalCurrentId.toString())
+    //       // 初始化操作按钮状态
+    //       modalNormalShow.value = true;
+    //       // 初始化尺寸计算
+    //       computedSize()
+    //       // 初始化位置计算
+    //       computedLocate()
+    //       // 初始化zIndex层级
+    //       initZindex()
+    //     }
+    //   }
+    // )
 
     /**
      * @description: 关闭
      * @return {*}
      */
-    const modalClose = () => {
-      // modalSmallShow.value = false;
-      // modalBigShow.value = false;
-      // modalNormalShow.value = false;
-      modalShow.value = false;
-      removeModalId()
+    const modalClose = (event:any) => {
+      console.log(1221,event);
+      // modalShow.value = false;
+      removeModalId(event)
       ctx.emit("modalClose");
     }
     /**
@@ -193,8 +210,19 @@ export default defineComponent({
     // 初始化位置信息
     const computedLocate = async ()=> {
       const modalDom = await getDom()
-      modalDom.left = `${props.position.defaultX }px`;
-      modalDom.top= `${props.position.defaultY }px`;
+      window.sessionStorage.getItem('muiModalCurrentId')
+      let ary = Array.from(document.getElementsByClassName("mm-modal-warp")); 
+
+
+
+
+
+
+
+      let idsList =  window.sessionStorage.getItem('muiModalIdsList')
+      let len = idsList ? JSON.parse(idsList) : 0
+      modalDom.left =`${0 + len.length * 10}px`
+      modalDom.top = `${0 + len.length * 24}px`
     }
 
     /**
@@ -214,15 +242,19 @@ export default defineComponent({
      * @description: 关闭窗体时，退出当前id
      * @return {*}
      */
-    const removeModalId = ()=>{
-      let currentId = modalDom.value.getAttribute("main-id")
+    const removeModalId = (e:any)=>{
+      let currentId = e.target.parentNode.parentNode.parentNode.getAttribute("main-id")
       let muiModalIdsList = JSON.parse(window.sessionStorage.getItem('muiModalIdsList') as string)
-      muiModalIdsList.splice(muiModalIdsList.indexOf(currentId),1)
-      window.sessionStorage.setItem('muiModalIdsList',JSON.stringify(muiModalIdsList)) 
+      let i = muiModalIdsList.indexOf(currentId)
+      if(i>-1){
+        muiModalIdsList.splice(muiModalIdsList.indexOf(currentId),1)
+        window.sessionStorage.setItem('muiModalIdsList',JSON.stringify(muiModalIdsList)) 
+      }
     }
    
     return () => (
-      modalShow.value && <div class="m-modal-wrap" ref={modalDom} main-id={props.id}>
+      // modalShow.value && <div class="m-modal-wrap" ref={modalDom} main-id={props.id}>
+      <div class="m-modal-wrap mm-modal-warp" ref={modalDom} main-id={props.id}>
           <div
             ref={modalDomInner}
             class={`m-modal ${ modalSmallShow.value ? 'modal-wrap modalSmall':'modal-wrap'}`}
