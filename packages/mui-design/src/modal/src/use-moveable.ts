@@ -1,6 +1,6 @@
 
 import { ref, SetupContext } from 'vue';
-import { on, off } from "./dom";
+import { on, off,createElementMask } from "./dom";
 import { ModalProps } from './modal-types';
 
 export const useMoveable = (props: ModalProps, ctx: SetupContext<Record<string, any>>) => {
@@ -11,9 +11,9 @@ export const useMoveable = (props: ModalProps, ctx: SetupContext<Record<string, 
   const modalDomInner = ref()
   const modalHeader = ref()
   const modalBody = ref()
-  const maskDom = ref()
+  // const maskDom = ref()
   const currentDom = ref()
-
+  
   let moveStartX = ref()
   let moveStartY = ref()
   let startX = ref()
@@ -23,10 +23,22 @@ export const useMoveable = (props: ModalProps, ctx: SetupContext<Record<string, 
   let headerHeight = ref()
   let targetDivWidth = ref()
   let targetDivHeight = ref()
+
+  /**
+   * @description: 位置信息
+   * @return {*}
+   */
+   let oldLocate = ref(<any>{
+    left:0 || "",
+    top: 0 || "",
+    width: 0 || "",
+    height: 0 || ""
+  })
  
   const handleMoveStart = (event: any) => {
     currentDom.value = event.target.parentNode
     dragging.value = true;
+    createElementMask()
     // 鼠标的位置,参照modal左上角
     moveStartX.value = event.clientX - modalDomInner.value.offsetLeft;
     moveStartY.value = event.clientY - modalDomInner.value.offsetTop;
@@ -40,7 +52,7 @@ export const useMoveable = (props: ModalProps, ctx: SetupContext<Record<string, 
   const handleMoveMove = async (event: any) => {
 
     if (!dragging.value) return false;
-    maskDom.value.style["pointer-events"] = "all";
+    // maskDom.value.style["pointer-events"] = "all";
     event.preventDefault();
     // 得到鼠标拖动的x,y距离
     let distX = event.clientX - moveStartX.value;
@@ -54,7 +66,7 @@ export const useMoveable = (props: ModalProps, ctx: SetupContext<Record<string, 
   const handleMoveEnd = async (event:any) => {
    
     dragging.value = false;
-    maskDom.value.style["pointer-events"] = "none";
+    // maskDom.value.style["pointer-events"] = "none";
     // 处理上下边界
     if (Number(currentDom.value.style.top.split("p")[0]) <= 0) {
       currentDom.value.style.top = 0;
@@ -79,6 +91,7 @@ export const useMoveable = (props: ModalProps, ctx: SetupContext<Record<string, 
     // 鼠标的位置
     startX.value = event.clientX;
     startY.value = event.clientY;
+    createElementMask()
     on(window, "mousemove", handleResizeMove);
     on(window, "mouseup", handleResizeUp);
     // });
@@ -86,7 +99,7 @@ export const useMoveable = (props: ModalProps, ctx: SetupContext<Record<string, 
   
   const handleResizeMove = (event: any) => {
     if (!is_moving.value) return false;
-    maskDom.value.style["pointer-events"] = "all";
+    // maskDom.value.style["pointer-events"] = "all";
     event.preventDefault();
     // 得到鼠标拖动的宽高距离
     var distX = event.clientX - startX.value;
@@ -112,14 +125,28 @@ export const useMoveable = (props: ModalProps, ctx: SetupContext<Record<string, 
     // }
   }
 
-  const handleResizeUp = (e: Event) => {
+  const handleResizeUp = (event: any) => {
+    
+    let distX = event.clientX - startX.value
+    let distY = event.clientY - startY.value
+    console.log(distX === 0 && distY === 0);
+    
+    // 单纯的点击事件禁止进行宽高变化
+    if (distX === 0 && distY === 0) {
+      off(window, "mousemove", handleResizeMove);
+      off(window, "mouseup", handleResizeUp);
+      return
+    }
+    console.log(121212);
+    
+
     targetDiv.value.style.width = frameDiv.value.style.width;
     targetDiv.value.style.height = frameDiv.value.style.height;
     modalBody.value.style.height = `${frameDiv.value.offsetHeight - headerHeight.value}px`;
 
     // resize 事件回调
     ctx.emit("modalResize", {
-      event: e,
+      event: event,
       data: props.data,
       size: {
         width: frameDiv.value.style.width,
@@ -127,8 +154,8 @@ export const useMoveable = (props: ModalProps, ctx: SetupContext<Record<string, 
       }
     });
     is_moving.value = false;
-    if (maskDom.value)
-      maskDom.value.style["pointer-events"] = "none";
+    // if (maskDom.value)
+    //   maskDom.value.style["pointer-events"] = "none";
     off(window, "mousemove", handleResizeMove);
     off(window, "mouseup", handleResizeUp);
   }
@@ -143,13 +170,29 @@ export const useMoveable = (props: ModalProps, ctx: SetupContext<Record<string, 
       window.sessionStorage.setItem('muiModalZindex',JSON.stringify(1001))
     }
   }
+
+  /**
+   * @description: 记录上一次位置
+   * @return {*}
+   */
+  const getLocate = async ()=> {
+    oldLocate.value = {
+      left: `${modalDomInner.value.offsetLeft}px`,
+      top: `${modalDomInner.value.offsetTop}px`,
+      width: `${modalDomInner.value.offsetWidth}px`,
+      height: `${modalDomInner.value.offsetHeight}px`,
+    }
+  }
+
   return {
     is_moving,
     modalDomInner,
     modalHeader,
     modalBody,
-    maskDom,
+    // maskDom,
+    oldLocate,
     handleMoveStart,
     handleResizeStart,
+    getLocate,
   }
 }

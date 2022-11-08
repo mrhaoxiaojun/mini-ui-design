@@ -35,7 +35,7 @@
     :size = "{defaultW:500,defaultH:300}"
     >
     <template #modalBody>
-      <div sytle="width:100px;">555</div>
+      <div sytle="width:100px;">窗口Id ：{{id1}}</div>
       <p>普通窗体</p> 
      </template>
   </m-modal>
@@ -50,7 +50,7 @@
     :size = "{maxDomId:'testId'}"
     >
     <template #modalBody>
-      <div sytle="width:100px;">123</div>
+      <div sytle="width:100px;">窗口数据 ：{{id2}}</div>
       <p>模拟其他盒子高度</p> 
      </template>
   </m-modal>
@@ -61,11 +61,11 @@
     :id="item.id"
     :title='item.title'
     @modalSmall ="item.modalSmall"
-    @modalClose="item.modalClose"
-    :size = "{defaultW:500,defaultH:300}"
+    @modalClose="item.modalClose('FromView',index)"
+    :size = "{defaultW:600,defaultH:300}"
     >
     <template #modalBody>
-      <div sytle="width:100px;">123</div>
+      <div sytle="width:100px;">窗口数据 ：{{item}}</div>
       <p>循环数据窗体需求</p> 
      </template>
   </m-modal>
@@ -142,7 +142,7 @@ const open3 = async (data)=>{
       // this.viewStatusBar.forEach((ele,i,ary)=>{
       //   ele.feMainId === this.viewData[type][index].feMainId && ary.splice(i,1)
       // })
-      // this.viewData[type].splice(index,1)
+      modalData.value[type].splice(index,1)
 
     }
     // 最小化回调-hxj
@@ -155,9 +155,11 @@ const open3 = async (data)=>{
     // 等待多窗体出厂Id序列配置完成
     await nextTick()
     // 获取全局多窗体唯一标识
-    data.id = window.sessionStorage.getItem('muiModalCurrentId')
+    let id = window.sessionStorage.getItem('muiModalCurrentId')
+    // 加塞给当前窗体数据的id
+    modalData.value[data.type][modalData.value[data.type].length-1]["id"] = id
     // 存储全局多窗体唯一标识
-    setModalId(data.id)
+    setModalId(id)
   // }
   
 }

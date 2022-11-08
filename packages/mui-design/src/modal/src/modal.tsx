@@ -3,11 +3,11 @@
  * @Date: 2022-06-16 22:28:43
  * @Description: 多功能模态框，简称多窗体，支持最大、最小、关闭、拖拽、伸缩、边界回弹、多个窗体层叠弹出、全局识别维护唯一标识和层级
  * @LastEditors: haoxiaojun
- * @LastEditTime: 2022-11-02 17:54:41
+ * @LastEditTime: 2022-11-08 16:59:36
  */
-import { defineComponent, ref, reactive, watch, nextTick,onMounted} from 'vue';
+import { defineComponent, ref, reactive, nextTick,onMounted} from 'vue';
 import { modalProps, ModalProps } from './modal-types'
-import { modalDom, getDom, getLocate,oldLocate } from "./dom";
+import { modalDom,closeMask } from './dom';
 import { useMoveable } from './use-moveable';
 import './modal.scss'
 
@@ -20,8 +20,8 @@ export default defineComponent({
     let modalSmallShow = ref(false)
     let modalBigShow = ref(false)
     let modalNormalShow = ref(true)
-    let is_showMask = ref(true)
-    let modalShow = ref(props.isShow)
+    // let is_showMask = ref(true)
+    // let modalShow = ref(props.isShow)
     let modalSizes = reactive(props.size)
 
     const {
@@ -29,9 +29,11 @@ export default defineComponent({
       modalDomInner,
       modalHeader,
       modalBody,
-      maskDom,
+      // maskDom,
+      oldLocate,
       handleMoveStart,
       handleResizeStart,
+      getLocate,
     } = useMoveable(props, ctx);
     
     // 全局设置多窗体的Id，每次弹出都会获得唯一的Id
@@ -48,44 +50,17 @@ export default defineComponent({
       computedLocate()
       // 初始化zIndex层级
       initZindex()
-      
+      // 监听刷新页面需要需要清空指定session
+      clearSession()
+      // 关闭遮罩
+      closeMask()
     })
-    
-    /**
-     * @description: 监控弹窗状态
-     * @param {*} props
-     * @param {*} param2
-     * @return {*}
-     */
-    // watch(
-    //   () => props.isShow, 
-    //   (newValue, oldValue) => {
-    //     modalShow.value = newValue
-    //     if(modalShow.value){
-
-    //       // 全局设置多窗体的Id，每次弹出都会获得唯一的Id
-    //       let muiModalCurrentId = Number(window.sessionStorage.getItem('muiModalCurrentId') || 0)
-    //       muiModalCurrentId = muiModalCurrentId +1 
-    //       window.sessionStorage.setItem('muiModalCurrentId', muiModalCurrentId.toString())
-    //       // 初始化操作按钮状态
-    //       modalNormalShow.value = true;
-    //       // 初始化尺寸计算
-    //       computedSize()
-    //       // 初始化位置计算
-    //       computedLocate()
-    //       // 初始化zIndex层级
-    //       initZindex()
-    //     }
-    //   }
-    // )
-
+   
     /**
      * @description: 关闭
      * @return {*}
      */
     const modalClose = (event:any) => {
-      console.log(1221,event);
-      // modalShow.value = false;
       removeModalId(event)
       ctx.emit("modalClose");
     }
@@ -108,30 +83,32 @@ export default defineComponent({
      */
     const modalBig = async (event:Event)=> {
 
+      // 记录旧的位置、大小信息
       await getLocate();
       console.log(oldLocate);
-      
 
+      // 设置状态
       modalNormalShow.value = false;
       modalSmallShow.value = false;
       modalBigShow.value = true;
+
+      // 设置位置、大小
+      await nextTick()
+      modalDomInner.value.style.left = `${props.position.maxX }px`;
+      modalDomInner.value.style.top = `${props.position.maxY }px`;
+      modalDomInner.value.style.width = `${modalSizes.maxW}px`;
+      modalDomInner.value.style.height = `${modalSizes.maxH}px`;
       
-      const modalDom = await getDom()
-      modalDom.left = `${props.position.maxX }px`;
-      modalDom.top = `${props.position.maxY }px`;
-      modalDom.width = `${modalSizes.maxW}px`;
-      modalDom.height = `${modalSizes.maxH}px`;
+      // 设置body高度-方便调用者使用获取
+      modalDomInner.value.getElementsByClassName("m-modal-body")[0].style.height = `${modalSizes.maxH - 24}px`;
 
-      console.log(modalDom);
-
-      // m-modal-body 重置最大
-      (await getDom("m-modal-body")).height = `${modalSizes.maxH - 24}px`;
+      // 返回当前窗体信息
       ctx.emit("modalResize", {
         event: event,
         data: props.data,
         size: {
-          width: modalDom.width,
-          height: modalDom.height
+          width: modalDomInner.value.style.width,
+          height: modalDomInner.value.style.height
         }
       });
     }
@@ -142,28 +119,29 @@ export default defineComponent({
      * @return {*}
      */
     const modalNormal = async (event:Event)=> {
-      const modalDom = await getDom()
+
+      // 还原窗体位置、大小信息
+      await nextTick()
+      modalDomInner.value.style.left = oldLocate.value.left;
+      modalDomInner.value.style.top = oldLocate.value.top;
+      modalDomInner.value.style.width = oldLocate.value.width;
+      modalDomInner.value.style.height = oldLocate.value.height;
       
-      modalDom.left = oldLocate.left;
-      modalDom.top = oldLocate.top;
-      modalDom.width = oldLocate.width;
-      // modalDom.width = modalSizes.defaultW = oldLocate.width;
-      modalDom.height = oldLocate.height;
-      (await getDom("m-modal-body")).height  = oldLocate.height
-        ? `${Number(oldLocate.height) - 24}px`
-        : "auto";
-        console.log(modalDom.width);
-        console.log(modalDom.height);
-        
+      // 设置body高度-方便调用者使用获取
+      modalDomInner.value.getElementsByClassName("m-modal-body")[0].style.height = oldLocate.value.height
+      ? `${Number(oldLocate.value.height.split("p")[0]) - 24}px`
+      : "auto";
+      
+      // 设置正常化状态
       modalNormalShow.value = true;
-      // modalSmallShow.value = false;
-      // modalBigShow.value = false;
+
+      // 返回当前窗体信息
       ctx.emit("modalResize", {
         event: event,
         data: props.data,
         size: {
-          width:modalDom.width,
-          height:modalDom.height
+          width:modalDomInner.value.style.width,
+          height:modalDomInner.value.style.height
         }
       });
     }
@@ -185,9 +163,8 @@ export default defineComponent({
         defaultH = Number(defaultDom?.offsetHeight) - 20
       }
 
-      const modalDom = await getDom()
-      modalDom.width = `${modalSizes.defaultW ? modalSizes.defaultW: defaultW}px`;
-      modalDom.height = `${modalSizes.defaultH ? modalSizes.defaultH : defaultH}px`;
+      modalDomInner.value.style.width = `${modalSizes.defaultW ? modalSizes.defaultW: defaultW}px`;
+      modalDomInner.value.style.height = `${modalSizes.defaultH ? modalSizes.defaultH : defaultH}px`;
       
     
       // 处理最大宽高
@@ -209,20 +186,15 @@ export default defineComponent({
     }
     // 初始化位置信息
     const computedLocate = async ()=> {
-      const modalDom = await getDom()
-      window.sessionStorage.getItem('muiModalCurrentId')
-      let ary = Array.from(document.getElementsByClassName("mm-modal-warp")); 
-
-
-
-
-
-
+     
+      await nextTick()
 
       let idsList =  window.sessionStorage.getItem('muiModalIdsList')
       let len = idsList ? JSON.parse(idsList) : 0
-      modalDom.left =`${0 + len.length * 10}px`
-      modalDom.top = `${0 + len.length * 24}px`
+      
+      modalDomInner.value.style.left =`${200 + len.length * 10}px`
+      modalDomInner.value.style.top = `${50 + len.length * 24}px`
+      
     }
 
     /**
@@ -243,7 +215,7 @@ export default defineComponent({
      * @return {*}
      */
     const removeModalId = (e:any)=>{
-      let currentId = e.target.parentNode.parentNode.parentNode.getAttribute("main-id")
+      let currentId = e.target.parentNode.parentNode.parentNode.getAttribute("data-mainId")
       let muiModalIdsList = JSON.parse(window.sessionStorage.getItem('muiModalIdsList') as string)
       let i = muiModalIdsList.indexOf(currentId)
       if(i>-1){
@@ -251,10 +223,22 @@ export default defineComponent({
         window.sessionStorage.setItem('muiModalIdsList',JSON.stringify(muiModalIdsList)) 
       }
     }
+
+     /**
+      * @description: 页面刷新清空指定session
+      * @return {*}
+      */
+     const clearSession = ()=>{
+      window.addEventListener('beforeunload', e => {
+        window.sessionStorage.removeItem('muiModalZindex')
+        window.sessionStorage.removeItem('muiModalIdsList')
+        window.sessionStorage.removeItem('muiModalCurrentId')
+      }) 
+    }
    
     return () => (
       // modalShow.value && <div class="m-modal-wrap" ref={modalDom} main-id={props.id}>
-      <div class="m-modal-wrap mm-modal-warp" ref={modalDom} main-id={props.id}>
+      <div class="m-modal-wrap mm-modal-warp" ref={modalDom}  data-mainId={props.id}>
           <div
             ref={modalDomInner}
             class={`m-modal ${ modalSmallShow.value ? 'modal-wrap modalSmall':'modal-wrap'}`}
@@ -305,7 +289,7 @@ export default defineComponent({
 
           </div>
           
-          { is_showMask ? <div class="m-modal-mask" ref={maskDom} ></div> : ""}
+          {/* { is_showMask ? <div class="m-modal-mask" ref={maskDom} ></div> : ""} */}
           { props.mask ? <div class="m-modal-bgMask" ></div> : ""}
 
       </div>
