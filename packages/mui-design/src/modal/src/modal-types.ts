@@ -36,29 +36,63 @@ export const modalProps = {
       };
     }
   },
-  size: {
+  // 可选,如果有参考DOM 可传入,覆盖默认的宽高
+  defaultDomId: {
+    type: String,
+    default: ""
+  },
+  // 默认宽度
+  defaultW: {
+    type: Number,
+    default: 500
+  },
+  // 默认高度
+  defaultH: {
+    type: Number,
+    default: 300
+  },
+   // 可选, 如果有参考DOM 可传入,覆盖默认的最大宽高
+   maxDomId: {
+    type: String,
+    default: ""
+  },
+  // 最大宽度
+  maxW: {
+    type: Number,
+    default: 800
+  },
+  // 最大高度
+  maxH: {
+    type: Number,
+    default: 500
+  },
+  // 最小宽度
+  minW: {
+    type: Number,
+    default: 150
+  },
+  // 最小高度
+  minH: {
+    type: Number,
+    default: 150
+  },
+  // 默认窗体左上角坐标位置
+  defaultPosition: {
     type: Object,
     default: () => {
       return {
-        defaultW: 500, 
-        defaultH: 300, 
-        defaultDomId:"", // 可选,如果有参考DOM 可传入,覆盖默认的宽高
-        maxW: 800, 
-        maxH: 500,
-        maxDomId:"", // 可选, 如果有参考DOM 可传入,覆盖默认的最大宽高
-        minW: 150, 
-        minH: 150,
+        x: 240, 
+        y: 200, 
       };
     }
   },
-  position:{
+  // 最大化窗体左上角坐标位置
+  maxPosition:{
     type: Object,
     default: () => {
       return {
-        defaultX: 240, 
-        defaultY: 200, 
-        maxX: 240, 
-        maxY: 200
+        x: 240, 
+        y: 200
       };
     }
   },

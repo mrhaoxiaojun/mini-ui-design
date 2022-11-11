@@ -3,11 +3,11 @@
  * @Date: 2022-06-16 22:28:43
  * @Description: 多功能模态框，简称多窗体，支持最大、最小、关闭、拖拽、伸缩、边界回弹、多个窗体层叠弹出、全局识别维护唯一标识和层级
  * @LastEditors: haoxiaojun
- * @LastEditTime: 2022-11-08 16:59:36
+ * @LastEditTime: 2022-11-11 11:29:15
  */
-import { defineComponent, ref, reactive, nextTick,onMounted} from 'vue';
+import { defineComponent, ref, reactive, nextTick,onMounted ,getCurrentInstance} from 'vue';
 import { modalProps, ModalProps } from './modal-types'
-import { modalDom,closeMask } from './dom';
+import { modalDom, closeMask , cleateStatusBar } from './dom';
 import { useMoveable } from './use-moveable';
 import './modal.scss'
 
@@ -16,14 +16,17 @@ export default defineComponent({
   props: modalProps,
   // emits: ["modalClose","modalSmall","modalResize"],
   setup(props: ModalProps, ctx) {
-
+    
     let modalSmallShow = ref(false)
     let modalBigShow = ref(false)
     let modalNormalShow = ref(true)
+    let maxW = ref(props.maxW)
+    let maxH = ref(props.maxH)
+    // let muiModalMIn = ref([])
     // let is_showMask = ref(true)
     // let modalShow = ref(props.isShow)
-    let modalSizes = reactive(props.size)
-
+    // let modalSizes = reactive(props.size)
+    
     const {
       is_moving,
       modalDomInner,
@@ -35,6 +38,7 @@ export default defineComponent({
       handleResizeStart,
       getLocate,
     } = useMoveable(props, ctx);
+    
     
     // 全局设置多窗体的Id，每次弹出都会获得唯一的Id
     let muiModalCurrentId = Number(window.sessionStorage.getItem('muiModalCurrentId') || 0)
@@ -68,11 +72,21 @@ export default defineComponent({
      * @description: 最小化
      * @return {*}
      */
-    const modalSmall= ()=> {
+    const modalSmall= (event:any)=> {
+      
+      // 1、当前记录位置
       getLocate();
-      modalNormalShow.value = false;
-      modalSmallShow.value = true;
-      modalBigShow.value = false;
+      // 2、最小化当前窗体
+      event.target.parentNode.parentNode.parentNode.style.display = 'none'
+      // 3、获取最小化窗体数据集合
+      let modalMin = window.sessionStorage.getItem("muiModalMIn")
+      let muiModalMIn = modalMin ?  JSON.parse(modalMin) : []
+      // 4、添加最新数据到书记集合并存储到session （去重动作在还原窗体时已做）
+      muiModalMIn.push(props.data)
+      window.sessionStorage.setItem('muiModalMIn',JSON.stringify(muiModalMIn))
+      // 5、根据数据集合动态生成状态条
+      cleateStatusBar(muiModalMIn)
+      // 6、回调业务层
       ctx.emit("modalSmall");
     }
 
@@ -94,13 +108,13 @@ export default defineComponent({
 
       // 设置位置、大小
       await nextTick()
-      modalDomInner.value.style.left = `${props.position.maxX }px`;
-      modalDomInner.value.style.top = `${props.position.maxY }px`;
-      modalDomInner.value.style.width = `${modalSizes.maxW}px`;
-      modalDomInner.value.style.height = `${modalSizes.maxH}px`;
+      modalDomInner.value.style.left = `${props.maxPosition.x }px`;
+      modalDomInner.value.style.top = `${props.maxPosition.y }px`;
+      modalDomInner.value.style.width = `${props.maxW}px`;
+      modalDomInner.value.style.height = `${props.maxH}px`;
       
       // 设置body高度-方便调用者使用获取
-      modalDomInner.value.getElementsByClassName("m-modal-body")[0].style.height = `${modalSizes.maxH - 24}px`;
+      modalDomInner.value.getElementsByClassName("m-modal-body")[0].style.height = `${props.maxH - 24}px`;
 
       // 返回当前窗体信息
       ctx.emit("modalResize", {
@@ -153,31 +167,24 @@ export default defineComponent({
     const computedSize= async ()=> {
       
       // 处理默认宽高
-      let defaultW = 500
-      let defaultH = 300
-      console.log(modalSizes);
+      let defaultW = props.defaultW
+      let defaultH = props.defaultH
 
-      if( modalSizes.defaultDomId){
-        let defaultDom = document.getElementById(modalSizes.defaultDomId)
+      if( props.defaultDomId){
+        let defaultDom = document.getElementById(props.defaultDomId)
         defaultW = Number(defaultDom?.offsetWidth) - 20
         defaultH = Number(defaultDom?.offsetHeight) - 20
       }
 
-      modalDomInner.value.style.width = `${modalSizes.defaultW ? modalSizes.defaultW: defaultW}px`;
-      modalDomInner.value.style.height = `${modalSizes.defaultH ? modalSizes.defaultH : defaultH}px`;
+      modalDomInner.value.style.width = `${defaultW}px`;
+      modalDomInner.value.style.height = `${defaultH}px`;
       
-    
       // 处理最大宽高
-      let maxW = 800
-      let maxH = 500
-
-      if( modalSizes.maxDomId ){
-        let maxDom = document.getElementById(modalSizes.maxDomId)
-        maxW = Number(maxDom?.offsetWidth) - 20
-        maxH = Number(maxDom?.offsetHeight) - 20
+      if( props.maxDomId ){
+        let maxDom = document.getElementById(props.maxDomId)
+        maxW.value = Number(maxDom?.offsetWidth) - 20
+        maxH.value = Number(maxDom?.offsetHeight) - 20
       }
-      modalSizes.maxW = modalSizes.maxW ? modalSizes.maxW : maxW
-      modalSizes.maxH = modalSizes.maxH ? modalSizes.maxH : maxH
 
       // 最小宽高不做出处理默认150*150
 
@@ -207,6 +214,8 @@ export default defineComponent({
         window.sessionStorage.setItem('muiModalZindex',JSON.stringify(JSON.parse(muiModalZindex) + 1))
         await nextTick()
         modalDomInner.value.style.zIndex = JSON.stringify(JSON.parse(muiModalZindex) + 1)
+      }else{
+        window.sessionStorage.setItem('muiModalZindex',"1001")
       }
     }
     
@@ -233,16 +242,17 @@ export default defineComponent({
         window.sessionStorage.removeItem('muiModalZindex')
         window.sessionStorage.removeItem('muiModalIdsList')
         window.sessionStorage.removeItem('muiModalCurrentId')
+        window.sessionStorage.removeItem('muiModalMIn')
       }) 
     }
    
     return () => (
       // modalShow.value && <div class="m-modal-wrap" ref={modalDom} main-id={props.id}>
-      <div class="m-modal-wrap mm-modal-warp" ref={modalDom}  data-mainId={props.id}>
+      <div class="m-modal-wrap mui-modal-warp" id={'mui-modal-warp-'+ props.id} ref={modalDom}  data-mainId={props.id} >
           <div
             ref={modalDomInner}
-            class={`m-modal ${ modalSmallShow.value ? 'modal-wrap modalSmall':'modal-wrap'}`}
-            style = { modalBigShow.value ? `width = ${modalSizes.maxW}` : `width = ${modalSizes.defaultW}`}>
+            class={`m-modal modal-wrap`}
+            style = { modalBigShow.value ? `width = ${maxW}` : `width = ${props.defaultW}`}>
 
 
             {/* heander */}

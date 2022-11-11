@@ -27,12 +27,14 @@
 
    <!--普通窗体 -->
   <m-modal
-    v-if="isShow1"
-    :id="id1"
+    v-if = "isShow1"
+    :data = "data1"
+    :id = "id1"
     title='普通窗体'
-    @modalSmall ="modalSmall1"
-    @modalClose="modalClose1"
-    :size = "{defaultW:500,defaultH:300}"
+    @modalSmall = "modalSmall1"
+    @modalClose = "modalClose1"
+    :defaultW = '660'
+    :defaultH = '300'
     >
     <template #modalBody>
       <div sytle="width:100px;">窗口Id ：{{id1}}</div>
@@ -42,12 +44,13 @@
 
   <!--模拟其他盒子高度-->
   <m-modal 
-    v-if="isShow2"
-    :id="id2"
+    v-if = "isShow2"
+    :data = "data2"
+    :id = "id2"
     title='模拟其他盒子高度'
-    @modalSmall ="modalSmall2"
-    @modalClose="modalClose2"
-    :size = "{maxDomId:'testId'}"
+    @modalSmall = "modalSmall2"
+    @modalClose= "modalClose2"
+    maxDomId = "testId"
     >
     <template #modalBody>
       <div sytle="width:100px;">窗口数据 ：{{id2}}</div>
@@ -57,12 +60,14 @@
 
   <!--循环同种数据类型窗体Demo-->
   <m-modal 
-    v-for="(item,index) in modalData.FromView" :key="index"
-    :id="item.id"
-    :title='item.title'
-    @modalSmall ="item.modalSmall"
-    @modalClose="item.modalClose('FromView',index)"
-    :size = "{defaultW:600,defaultH:300}"
+    v-for = "(item,index) in modalData.FromView" :key = "index"
+    :data = "item"
+    :id = "item.id"
+    :title = 'item.title'
+    @modalSmall = "item.modalSmall"
+    @modalClose = "item.modalClose('FromView',index)"
+    :defaultW = '600'
+    :defaultH = '300'
     >
     <template #modalBody>
       <div sytle="width:100px;">窗口数据 ：{{item}}</div>
@@ -78,9 +83,10 @@ import {ref,nextTick } from 'vue'
 
 let isShow1 = ref(false)
 let isShow2 = ref(false)
-let isShow3 = ref(false)
 let id1 = ref()
 let id2 = ref()
+let data1 = ref()
+let data2 = ref()
 let modalData = ref({
   FromView:[],
   TableView:[]
@@ -96,12 +102,13 @@ const open1 = async (data) =>{
   data.id = window.sessionStorage.getItem('muiModalCurrentId')
   // 4、设置唯一标识到窗体上
   id1.value = data.id
-  // 5、存储全局多窗体唯一标识统一管理
+  // 5、当前数据项
+  data1.value = data
+  // 6、存储全局多窗体唯一标识统一管理
   setModalId(data.id)
-
 }
 const modalSmall1 = (data)=>{
-  isShow1.value = false
+  // 最小化回调  
 }
 const modalClose1 = (data)=>{
   isShow1.value = false
@@ -117,12 +124,14 @@ const open2 = async (data)=>{
   data.id = window.sessionStorage.getItem('muiModalCurrentId')
   // 4、设置唯一标识到窗体上
   id2.value = data.id
-  // 5、存储全局多窗体唯一标识
+  // 5、当前数据项
+  data2.value = data
+  // 6、存储全局多窗体唯一标识
   setModalId(data.id)
 
 }
 const modalSmall2 = (data)=>{
-  isShow2.value = false
+  // 最小化回调  
 }
 const modalClose2 = (data)=>{
   isShow2.value = false

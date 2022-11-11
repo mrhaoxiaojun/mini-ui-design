@@ -109,39 +109,39 @@ export const useMoveable = (props: ModalProps, ctx: SetupContext<Record<string, 
     frameDiv.value.style.width = targetDivWidth.value + distX + "px";
     frameDiv.value.style.height = targetDivHeight.value + distY + "px";
     // 设置最小范围：不能无限制缩放，影响体验
-    if (parseInt(frameDiv.value.style.width) <= props.size.minW) {
-      frameDiv.value.style.width = props.size.minW + "px";
+    if (parseInt(frameDiv.value.style.width) <= props.minW) {
+      frameDiv.value.style.width = props.minW + "px";
     }
-    if (parseInt(frameDiv.value.style.height) <= props.size.minH) {
-      frameDiv.value.style.height = props.size.minH + "px";
+    if (parseInt(frameDiv.value.style.height) <= props.minH) {
+      frameDiv.value.style.height = props.minH + "px";
     }
 
     // 最大范围
-    // if (parseInt(frameDiv.value.style.width) >= props.size.maxW) {
-    //   frameDiv.value.style.width = props.size.maxW + 'px'
+    // if (parseInt(frameDiv.value.style.width) >= props.maxW) {
+    //   frameDiv.value.style.width = props.maxW + 'px'
     // }
-    // if (parseInt(frameDiv.value.style.height) >= props.size.maxH) {
-    //   frameDiv.value.style.height = props.size.maxH + 'px'
+    // if (parseInt(frameDiv.value.style.height) >= props.maxH) {
+    //   frameDiv.value.style.height = props.maxH + 'px'
     // }
   }
 
   const handleResizeUp = (event: any) => {
+    console.log(event.clientX,event.clientY);
     
     let distX = event.clientX - startX.value
     let distY = event.clientY - startY.value
-    console.log(distX === 0 && distY === 0);
-    
     // 单纯的点击事件禁止进行宽高变化
     if (distX === 0 && distY === 0) {
+      is_moving.value = false;
       off(window, "mousemove", handleResizeMove);
       off(window, "mouseup", handleResizeUp);
       return
     }
-    console.log(121212);
-    
 
+    // 设置外部宽高
     targetDiv.value.style.width = frameDiv.value.style.width;
     targetDiv.value.style.height = frameDiv.value.style.height;
+    // 设置内部body的高度
     modalBody.value.style.height = `${frameDiv.value.offsetHeight - headerHeight.value}px`;
 
     // resize 事件回调
