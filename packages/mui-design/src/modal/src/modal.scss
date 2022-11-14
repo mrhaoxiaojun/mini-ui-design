@@ -47,17 +47,29 @@
         position: relative;
         top: 1px;
         margin-left: 5px;
+        pointer-events: none;
+        font-size: 14px;
       }
     }
     .handleDom{
         position: absolute;
-        right:26px;
-        top:3px;
+        right:5px;
+        top:0px;
+        height: 24px;
         span{
           display: inline-block;
           color:#fff;
           cursor: pointer;
           padding-left: 6px;
+          height: 100%;
+          img{
+            position: relative;
+            top:5px;
+            width: 16px;
+            height: 16px;
+            // 阻止事件冒泡
+            pointer-events: none
+          }
         }
     }
   }
