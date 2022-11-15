@@ -133,9 +133,10 @@
     color: #fff;
     cursor: pointer;
     user-select: none;
+    font-size:12px;
   }
 }
-.mx-modal-mask {
+.mui-modal-mask {
   position: fixed;
   top: 0;
   bottom: 0;

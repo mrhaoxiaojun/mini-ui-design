@@ -1,3 +1,10 @@
+/*
+ * @Author: haoxiaojun
+ * @Date: 2022-06-16 22:28:43
+ * @Description: 参数
+ * @LastEditors: haoxiaojun
+ * @LastEditTime: 2022-11-15 11:23:03
+ */
 import type { PropType, ExtractPropTypes } from 'vue'
 
 export const modalProps = {

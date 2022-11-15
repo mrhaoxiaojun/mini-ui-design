@@ -3,14 +3,18 @@
  * @Date: 2022-06-20 10:38:19
  * @Description: 关于DOM的函数
  * @LastEditors: haoxiaojun
- * @LastEditTime: 2022-11-11 11:11:20
+ * @LastEditTime: 2022-11-15 11:33:12
  */
 
 import { ref } from 'vue';
 
 export const modalDom = ref()
 
-// 创建最小化状态条
+/**
+ * @description: 创建最小化状态条
+ * @param {any} muiModalMIn 最小化数据集合
+ * @return {*}
+ */
 export const cleateStatusBar = (muiModalMIn:any) => {
 
   // 1、清除状态条
@@ -21,6 +25,7 @@ export const cleateStatusBar = (muiModalMIn:any) => {
   // 2、创建状态条
   let divWarp = document.createElement('div')
   divWarp.setAttribute('id', 'mui-status-bar')
+  divWarp.setAttribute('style', `left:${document.getElementById("mui-modal-warp-1")?.style.width}`)
   document.body.append(divWarp)
   // 3、遍历创建最小化项
   muiModalMIn.forEach( (ele: any) => {
@@ -57,12 +62,16 @@ export const cleateStatusBar = (muiModalMIn:any) => {
 
     divWarp.append(div)
   });
+  //设置左侧间距
+  let statusBarDom = document.getElementById("mui-status-bar");
+  let barLeft = window.localStorage.getItem('mui-status-barLeft') || 260
+  if(statusBarDom) statusBarDom.style.left = `${barLeft}px`;
 }
 
  // 关闭遮罩
 export const closeMask = ()=> {
   document.onmouseup = function (event) {
-    let ele = Array.from(document.getElementsByClassName('mx-modal-mask'))
+    let ele = Array.from(document.getElementsByClassName('mui-modal-mask'))
     ele.forEach(element => {
       element.remove()
     })
@@ -71,8 +80,8 @@ export const closeMask = ()=> {
 // 创建遮罩
 export const createElementMask = ()=> {
   var div = document.createElement('div')
-  div.setAttribute('class', 'mx-modal-mask')
-  div.setAttribute('id', 'mx-maskDom')
+  div.setAttribute('class', 'mui-modal-mask')
+  // div.setAttribute('id', 'mx-maskDom')
   document.body.append(div)
 }
 

@@ -3,7 +3,7 @@
  * @Date: 2022-06-16 22:28:43
  * @Description: 多功能模态框，简称多窗体，支持最大、最小、关闭、拖拽、伸缩、边界回弹、多个窗体层叠弹出、全局识别维护唯一标识和层级
  * @LastEditors: haoxiaojun
- * @LastEditTime: 2022-11-14 17:12:09
+ * @LastEditTime: 2022-11-15 14:33:15
  */
 import { defineComponent, ref, nextTick,onMounted ,onUnmounted } from 'vue';
 import { modalProps, ModalProps } from './modal-types'
@@ -53,9 +53,9 @@ export default defineComponent({
       clearSession()
       // 关闭遮罩
       closeMask()
+     
     })
     onUnmounted(() => {
-      // console.log(props.parentData);
       // 卸载模态框时，检查当前是否有父级数据集合，如果有是否均为null，如果均为nul则清空
       if(props.parentData){
         let list = props.parentData;
@@ -92,7 +92,7 @@ export default defineComponent({
       // 3、获取最小化窗体数据集合
       let modalMin = window.sessionStorage.getItem("muiModalMIn")
       let muiModalMIn = modalMin ?  JSON.parse(modalMin) : []
-      // 4、添加最新数据到书记集合并存储到session （去重动作在还原窗体时已做）
+      // 4、添加最新数据到数据集合并存储到session （去重动作在还原窗体时已做）
       muiModalMIn.push(props.data)
       window.sessionStorage.setItem('muiModalMIn',JSON.stringify(muiModalMIn))
       // 5、根据数据集合动态生成状态条

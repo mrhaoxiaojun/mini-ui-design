@@ -1,3 +1,10 @@
+/*
+ * @Author: haoxiaojun
+ * @Date: 2022-06-28 17:31:19
+ * @Description: 移动和拉伸
+ * @LastEditors: haoxiaojun
+ * @LastEditTime: 2022-11-15 09:08:16
+ */
 
 import { ref, SetupContext } from 'vue';
 import { on, off,createElementMask } from "./dom";
@@ -11,7 +18,6 @@ export const useMoveable = (props: ModalProps, ctx: SetupContext<Record<string, 
   const modalDomInner = ref()
   const modalHeader = ref()
   const modalBody = ref()
-  // const maskDom = ref()
   const currentDom = ref()
   
   let moveStartX = ref()
@@ -79,7 +85,6 @@ export const useMoveable = (props: ModalProps, ctx: SetupContext<Record<string, 
   }
 
   const handleResizeStart = async (event: any) => {
-    // await nextTick(async () => {
     targetDiv.value = modalDomInner.value;
     frameDiv.value = event.target.nextElementSibling; // 线框dom
     headerHeight.value = modalHeader.value.offsetHeight; // modal header height
@@ -94,7 +99,6 @@ export const useMoveable = (props: ModalProps, ctx: SetupContext<Record<string, 
     createElementMask()
     on(window, "mousemove", handleResizeMove);
     on(window, "mouseup", handleResizeUp);
-    // });
   }
   
   const handleResizeMove = (event: any) => {
@@ -126,7 +130,6 @@ export const useMoveable = (props: ModalProps, ctx: SetupContext<Record<string, 
   }
 
   const handleResizeUp = (event: any) => {
-    console.log(event.clientX,event.clientY);
     
     let distX = event.clientX - startX.value
     let distY = event.clientY - startY.value
@@ -154,7 +157,6 @@ export const useMoveable = (props: ModalProps, ctx: SetupContext<Record<string, 
       }
     });
     is_moving.value = false;
-    // if (maskDom.value)
     //   maskDom.value.style["pointer-events"] = "none";
     off(window, "mousemove", handleResizeMove);
     off(window, "mouseup", handleResizeUp);
@@ -189,7 +191,6 @@ export const useMoveable = (props: ModalProps, ctx: SetupContext<Record<string, 
     modalDomInner,
     modalHeader,
     modalBody,
-    // maskDom,
     oldLocate,
     handleMoveStart,
     handleResizeStart,

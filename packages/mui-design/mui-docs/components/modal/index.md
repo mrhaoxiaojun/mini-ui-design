@@ -25,6 +25,7 @@
     title='普通窗体'
     @modalSmall = "modalSmall1"
     @modalClose = "modalClose1"
+    @modalResize = "modalResize"
     :data = "data1"
     :defaultW = '660'
     :defaultH = '300'
@@ -46,7 +47,8 @@ let id1 = ref()
 let data1 = ref()
 
 const open1 = async (data) =>{
-
+  // 0、拒绝重复打开
+  if(isShow1.value) return
   // 1、显示模态框
   isShow1.value = true
   // 2、等待多窗体出厂Id序列配置完成
@@ -61,14 +63,18 @@ const open1 = async (data) =>{
   setModalId(data.id)
 
 }
-const modalSmall1 = (data)=>{
+const modalSmall1 = ()=>{
   // 最小化回调  
 }
-const modalClose1 = (data)=>{
+const modalClose1 = ()=>{
   isShow1.value = false
 }
+// 窗体尺寸change回调
+const modalResize = (c)=>{
+  console.log("拖拽尺寸",c)
+}
 
-// 每个窗体引用必选方法，用于设置id，id来自于session自动生成
+// 每个窗体引用必选方法，用于设置id，id来自于session自动生成(固定写法)
 const setModalId = (id)=>{
   
   // 获取id集合
@@ -130,7 +136,8 @@ let id2 = ref()
 let data2 = ref()
 
 const open2 = async (data)=>{
-
+  // 0、拒绝重复打开
+  if(isShow2.value) return
   // 1、显示模态框
   isShow2.value = true
   // 2、等待多窗体出厂Id序列配置完成
@@ -145,13 +152,13 @@ const open2 = async (data)=>{
   setModalId(data.id)
 
 }
-const modalSmall2 = (data)=>{
+const modalSmall2 = ()=>{
   // 最小化回调  
 }
-const modalClose2 = (data)=>{
+const modalClose2 = ()=>{
   isShow2.value = false
 }
-// 每个窗体引用必选方法，用于设置id，id来自于session自动生成
+// 每个窗体引用必选方法，用于设置id，id来自于session自动生成(固定写法)
 const setModalId = (id)=>{
   
   // 获取id集合
@@ -184,11 +191,11 @@ const setModalId = (id)=>{
 ```vue
 <template>
 
-  <button @click="open3({title:'循环窗体头部1',type:'FromView'})">test3 循环数据窗体需求（FromView）</button>
-  <button @click="open3({title:'循环窗体头部2',type:'FromView'})">test3 循环数据窗体需求（FromView）</button>
+  <button @click="open3(data1)">test3 循环数据窗体需求（FromView）</button>
+  <button @click="open3(data2)">test3 循环数据窗体需求（FromView）</button>
 
-  <button @click="open3({title:'循环窗体头部3',type:'TableView'})">test3 循环数据窗体需求（TableView）</button>
-  <button @click="open3({title:'循环窗体头部4',type:'TableView'})">test3 循环数据窗体需求（TableView）</button>
+  <button @click="open3(data3)">test3 循环数据窗体需求（TableView）</button>
+  <button @click="open3(data4)">test3 循环数据窗体需求（TableView）</button>
 
   <!--循环同种数据类型窗体Demo-->
   <template v-for = "(item,index) in modalData.FromView" :key = "index">
@@ -244,13 +251,26 @@ let modalData = ref({
   FromView:[],
   TableView:[]
 })
+let data1 = ref({title:'循环窗体头部1',type:'FromView'})
+let data2 = ref({title:'循环窗体头部2',type:'FromView'})
+let data3 = ref({title:'循环窗体头部3',type:'TableView'})
+let data4 = ref({title:'循环窗体头部4',type:'TableView'})
 const open3 = async (data)=>{
-
+  
+  // 拒绝重复打开
+  if(data.isShow) return
+  
+  // -------------- 1、设置data(固定写法) --------------
+  
+  // 设置打开状态
+  data.isShow = true
   // 关闭回调
   data.modalClose= (type,index)=>{
     // 不能直接splice(modalData.value[type].splice(index,1))删除数据，数组位移会导致后面的数据窗口状态刷新
-    // 使用null代替关闭弹出
+    // 使用null代替关闭弹出,垃圾回收触发机制组件内已做
     modalData.value[type][index] = null;
+    // 设置关闭状态
+    data.isShow = false
   }
   // 最小化回调
   data.modalSmall = (data) => {
@@ -258,7 +278,7 @@ const open3 = async (data)=>{
   }
   // 窗体尺寸change回调
   data.modalResize = (c)=>{
-    console.log(c)
+    console.log("拖拽尺寸",c)
   }
   // 垃圾回收null数据清空
   data.modalDataClear = (data)=>{
@@ -266,18 +286,21 @@ const open3 = async (data)=>{
   }
   // 给对应类型窗体添加显示数据
   modalData.value[data.type].push(data)
-  // 等待多窗体出厂Id序列配置完成
+
+  // -------------- 2、设置id集合(固定写法) --------------
+
+  // 1)等待多窗体出厂Id序列配置完成
   await nextTick()
-  // 获取全局多窗体唯一标识
+  // 2)获取全局多窗体唯一标识
   let id = window.sessionStorage.getItem('muiModalCurrentId')
-  // 加塞给当前窗体数据的id
+  // 3)加塞给当前窗体数据的id和显示状态
   modalData.value[data.type][modalData.value[data.type].length-1]["id"] = id
-  // 存储全局多窗体唯一标识
+  // 4)存储全局多窗体唯一标识
   setModalId(id)
   
 }
 
-// 每个窗体引用必选方法，用于设置id，id来自于session自动生成
+// 每个窗体引用必选方法，用于设置id，id来自于session自动生成 (固定写法)
 const setModalId = (id)=>{
   
   // 获取id集合
@@ -308,17 +331,32 @@ const setModalId = (id)=>{
 
 m-modal 参数
 
-| 参数 | 类型 | 默认 | 说明 | 跳转 Demo | 全局配置项 |
-| ---- | ---- | ---- | ---- | --------- | --------- |
-|      |      |      |      |           |           |
-|      |      |      |      |           |           |
-|      |      |      |      |           |           |
+| 参数 | 类型 | 默认 | 说明 | 必填 | 跳转 Demo | 全局配置项 |
+| ---- | ---- | ---- | ---- |---- | --------- | --------- |
+|id      |String      |-      |唯一标识      |是       |           |           |
+|title      |String      |test      |标题文本      |是       |           |           |
+|mask      |Boolean      |false      |是否显示遮罩      |否       |           |           |
+|titleIcon      |Object      |-      |标题icon图标      |否       |           |           |
+|data      |Object      |-      |原始数据（配合modalResize回调使用）      |否       |           |           |
+|parentData      |Array      |-      |当前数据的父级数据集合（用于循环数据窗体）      |否       |           |           |
+|defaultDomId      |String      |-      |参考DOM的Id,覆盖默认的宽高      |否       |           |           |
+|defaultW      |Number      |500      |默认宽度（设置defaultDomId后无效）      |否       |           |           |
+|defaultH      |Number      |300      |默认高度（设置defaultDomId后无效）      |否       |           |           |
+|maxDomId      |String      |-      |参考DOM的Id，覆盖默认的最大宽高      |否       |           |           |
+|maxW      |Number      |800      |最大宽度（设置maxDomId后无效）      |否       |           |           |
+|maxH      |Number      |500      |最大高度（设置maxDomId后无效）      |否       |           |           |
+|minW      |Number      |150      |最小宽度      |否       |           |           |
+|minH      |Number      |150      |最小高度      |否       |           |           |
+|defaultPosition      |Object      |`{x:500,y:120}`     |默认窗体左上角坐标位置      |否       |           |           |
+|maxPosition      |Object      |`{x:300,y:120}`      |最大化窗体左上角坐标位置           |否           |           |       |
+|isShowMin      |Boolean      |true      |是否支持最小化按钮           |否           |           |        |
 
 m-modal 事件
 
-| 事件 | 类型 | 说明 | 跳转 Demo |
-| ---- | ---- | ---- | --------- |
-|      |      |      |           |
-|      |      |      |           |
-|      |      |      |           |
+| 事件 | 类型 | 说明 | 必填 | 跳转 Demo |
+| ---- | ---- | ---- | ---- | --------- |
+|modalDataClear      |Function      |清空循环数据垃圾对象，用于循环数据窗体必填，普通和窗体不不必传      |-      |           |
+|modalClose      |Function      |关闭，用于循环数据窗体必传，参数(数据类型,索引)，普通和窗体不必传      |      |           |
+|modalSmall      |Function      |最小化      |否      |           |
+|modalResize      |Function      |窗体大小改变回调      |否     |           |
 
