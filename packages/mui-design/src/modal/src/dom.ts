@@ -3,7 +3,7 @@
  * @Date: 2022-06-20 10:38:19
  * @Description: 关于DOM的函数
  * @LastEditors: haoxiaojun
- * @LastEditTime: 2022-11-15 11:33:12
+ * @LastEditTime: 2022-11-16 11:08:02
  */
 
 import { ref } from 'vue';
@@ -64,7 +64,7 @@ export const cleateStatusBar = (muiModalMIn:any) => {
   });
   //设置左侧间距
   let statusBarDom = document.getElementById("mui-status-bar");
-  let barLeft = window.localStorage.getItem('mui-status-barLeft') || 260
+  let barLeft = window.sessionStorage.getItem('muiStatusBarLeft') || 260
   if(statusBarDom) statusBarDom.style.left = `${barLeft}px`;
 }
 

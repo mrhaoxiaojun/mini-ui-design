@@ -3,7 +3,7 @@
  * @Date: 2022-06-16 22:28:43
  * @Description: 多功能模态框，简称多窗体，支持最大、最小、关闭、拖拽、伸缩、边界回弹、多个窗体层叠弹出、全局识别维护唯一标识和层级
  * @LastEditors: haoxiaojun
- * @LastEditTime: 2022-11-15 14:33:15
+ * @LastEditTime: 2022-11-16 11:38:50
  */
 import { defineComponent, ref, nextTick,onMounted ,onUnmounted } from 'vue';
 import { modalProps, ModalProps } from './modal-types'
@@ -258,6 +258,7 @@ export default defineComponent({
         window.sessionStorage.removeItem('muiModalIdsList')
         window.sessionStorage.removeItem('muiModalCurrentId')
         window.sessionStorage.removeItem('muiModalMIn')
+        window.sessionStorage.removeItem('muiStatusBarLeft')
       }) 
     }
 

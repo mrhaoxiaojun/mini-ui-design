@@ -327,9 +327,10 @@ const setModalId = (id)=>{
 
 :::
 
-### m-modal
+### API
 
-m-modal 参数
+- 多功能窗体API
+#### 参数
 
 | 参数 | 类型 | 默认 | 说明 | 必填 | 跳转 Demo | 全局配置项 |
 | ---- | ---- | ---- | ---- |---- | --------- | --------- |
@@ -351,12 +352,21 @@ m-modal 参数
 |maxPosition      |Object      |`{x:300,y:120}`      |最大化窗体左上角坐标位置           |否           |           |       |
 |isShowMin      |Boolean      |true      |是否支持最小化按钮           |否           |           |        |
 
-m-modal 事件
+#### 事件
 
 | 事件 | 类型 | 说明 | 必填 | 跳转 Demo |
 | ---- | ---- | ---- | ---- | --------- |
-|modalDataClear      |Function      |清空循环数据垃圾对象，用于循环数据窗体必填，普通和窗体不不必传      |-      |           |
+|modalDataClear      |Function      |清空循环数据垃圾对象，用于循环数据窗体必填，普通和窗体不必传      |-      |           |
 |modalClose      |Function      |关闭，用于循环数据窗体必传，参数(数据类型,索引)，普通和窗体不必传      |      |           |
 |modalSmall      |Function      |最小化      |否      |           |
 |modalResize      |Function      |窗体大小改变回调      |否     |           |
 
+#### session 说明（无需开发人员管理）
+
+| 字段 | 类型 | 说明 |
+| ---- | ---- | ---- |
+|muiModalZindex      |-      |记录多窗体的z-index,每次打开新窗体或者点击窗体标题栏会自动+1并赋值给当前窗体提高层级      | 
+|muiModalIdsList      |-      |页面展示出来的所有窗体Id的集合      | 
+|muiModalCurrentId      |-      |当前最后一次打开的窗体的Id      | 
+|muiModalMIn      |-      |最小化后的窗体数据集合      | 
+|muiStatusBarLeft      |-      |状态条距离window左侧距离      | 
