@@ -1,0 +1,10 @@
+15 error Error: Command failed with exit code 1: git remote update
+15 error fatal: unable to access 'https://github.com/mrhaoxiaojun/mini-ui-design.git/': OpenSSL SSL_read: Connection was reset, errno 10054
+15 error error: Could not fetch origin
+15 error Fetching origin
+15 error     at makeError (E:\PandaVersion\panda-git\FE-mui-design\node_modules\execa\lib\error.js:60:11)
+15 error     at Function.module.exports.sync (E:\PandaVersion\panda-git\FE-mui-design\node_modules\execa\index.js:194:17)
+15 error     at Object.execSync (E:\PandaVersion\panda-git\FE-mui-design\node_modules\@lerna\child-process\index.js:39:16)
+15 error     at updateRemote (E:\PandaVersion\panda-git\FE-mui-design\node_modules\@lerna\version\lib\is-behind-upstream.js:34:16)
+15 error     at isBehindUpstream (E:\PandaVersion\panda-git\FE-mui-design\node_modules\@lerna\version\lib\is-behind-upstream.js:16:3)
+15 error     at VersionCommand.initialize (E:\PandaVersion\panda-git\FE-mui-design\node_modules\@lerna\version\index.js:153:9)

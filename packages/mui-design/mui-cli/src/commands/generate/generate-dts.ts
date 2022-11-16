@@ -20,6 +20,7 @@ export const generateDts = () => {
   console.log("---------------------------")
   
   for(const name of components(entryDir)) {
+    // 除了指定组件的.d.ts这里用模板生成，其他文件type类型由于命令中的ts-node自动生成
     const destDts = resolve(outputDir, `${name}/src/${name}.d.ts`)
     fsExtra.outputFileSync(destDts, generateIndexDts(), 'utf8')
   }
