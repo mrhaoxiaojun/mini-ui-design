@@ -4,6 +4,14 @@ Mini UI Design 是 Vue3 版本的 UI 组件库，基于各家开源项目的思�
 
 > 设计价值在于，可以开源给有需要组件库的小伙伴进行二次开发，同样也希望小伙伴参与进来，欢迎pr
 
+## 实现组件
+
+*  :heavy_check_mark: Modal  多功能模态框 支持最大、最小、关闭、拖拽、伸缩、边界回弹、多个窗体层叠弹出、全局识别维护唯一标识和层级
+*  :heavy_check_mark: 其他组件在路上，个人维护有些慢。。。
+
+## Usage Mini UI Design
+
+[Mini UI Design 快速开始](https://github.com/mrhaoxiaojun/mini-ui-design/blob/master/packages/mui-design/mui-docs/start.md)
 
 ## 项目状态
 
@@ -64,10 +72,6 @@ README.md          // 项目说明
 * 提交规范：Commitizen + Commitlint (待实现)
 * 单元测试：vue-test-utils + jest
 * 自动部署：GitHub Actions(待实现)
-
-## Usage Mini UI Design
-
-[Mini UI Design 快速开始](https://github.com/mrhaoxiaojun/mini-ui-design/blob/master/packages/mui-design/mui-docs/start.md)
 
 ## License
 [MIT](https://github.com/mrhaoxiaojun/mini-ui-design/blob/master/LICENSE)
